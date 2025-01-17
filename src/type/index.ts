@@ -1,0 +1,7 @@
+export * from "./class-type"
+export * from "./course-type"
+export * from "./staff-type"
+export * from "./student-type"
+export * from "./customer-type"
+export * from "./status_record-type"
+export * from "./contract-type"

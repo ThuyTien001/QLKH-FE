@@ -1,0 +1,6 @@
+export * from "./router"
+export * from "./Home"
+export * from "./style-products"
+export * from "./Patent"
+export * from "./BarcodeNumber"
+export * from "./Copyright"
