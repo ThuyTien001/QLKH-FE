@@ -25,7 +25,8 @@ export const Login = () => {
             }
         } catch(error){
             console.error("Lỗi khi đăng nhập: ", error);
-            message.error("Đã xảy ra lỗi, vui lòng thử lại!");
+            alert("Sai tên đăng nhâậpc hoặc mật khẩu, vui lòng đăng nhập lại")
+            message.error("Sai tên đăng nhập hoặc mật khẩu, vui lòng đăng nhập lại!");
         }
     };
     return (

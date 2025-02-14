@@ -1,4 +1,5 @@
 import { useModal } from "@/hooks";
+import { UploadOutlined } from "@ant-design/icons";
 import { Button, Table } from "antd";
 import { BiEditAlt } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
@@ -6,9 +7,11 @@ import { IoIosAdd } from "react-icons/io";
 export const ListStudents = ({
     data,
     onAddStudent,
+    onUploadFile,
   }: {
     data: any[];
-    onAddStudent: () => void; // Callback được truyền từ Home
+    onAddStudent: () => void;
+    onUploadFile: () => void // Callback được truyền từ Home
   })  => {
     // console.log("student", data);
     const {toggleModal, ModalTypeEnum} = useModal();
@@ -19,6 +22,20 @@ export const ListStudents = ({
                     
                 </div>
                 <div className=" flex gap-5">
+                <Button type="primary">
+                        <div
+                            className="flex items-center gap-2"
+                            // onClick={() => {
+                                
+                            //     onUploadFile();
+                            // }}
+                            onClick={onUploadFile}
+                            
+                        >
+                            <p className="text-white">Tải tệp</p>
+                            <UploadOutlined  className="text-sm text-white" />
+                        </div>
+                    </Button>
                     <Button type="primary">
                         <div
                             className="flex items-center gap-2"

@@ -28,8 +28,10 @@ createRoot(document.getElementById('root')!).render(
       }}
     >
           <Provider store={store}>
-            <RouterProvider router={router} />
-            <ContainerModal />
+            {/* <AuthCheckWrapper> */}
+              <RouterProvider router={router} />
+              <ContainerModal />
+            {/* </AuthCheckWrapper> */}
         </Provider>
     </ConfigProvider>
   </StrictMode>

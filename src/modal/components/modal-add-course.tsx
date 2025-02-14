@@ -2,6 +2,7 @@ import { apiClass } from "@/api";
 import { apiCourse } from "@/api/api-course";
 import { DataCourse } from "@/type";
 import { Button, DatePicker, Form, Input, message, Select } from "antd"
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 export const ModalAddCourse = () => {
@@ -49,21 +50,23 @@ export const ModalAddCourse = () => {
                 alert('Không xác định được mã nhân viên vui lòng đăng nhập lại!');
                 return;
             }
-            console.log("mã nhân viên: ", staff_id);
+            // console.log("mã nhân viên: ", staff_id);
             const formattedValues = {
                 ...values,
                 staff_id,
-                start_time: values.start_time
-                    ? new Date(values.start_time).toISOString().split('T')[0]
-                    : null,
+                // start_time: values.start_time
+                //     ? new Date(values.start_time).toISOString().split('T')[0]
+                //     : null,
+                // // end_time: values.end_time
+                // //     ? new Date(values.end_time).toISOString().split('T')[0]
+                // //     : null,
                 // end_time: values.end_time
                 //     ? new Date(values.end_time).toISOString().split('T')[0]
                 //     : null,
-                end_time: values.end_time
-                    ? new Date(values.end_time).toISOString().split('T')[0]
-                    : null,
+                start_time: values.start_time ? dayjs(values.start_time).format("YYYY-MM-DD") : null,
+            end_time: values.end_time ? dayjs(values.end_time).format("YYYY-MM-DD") : null,
             };
-            console.log('Data form', formattedValues);
+            // console.log('Data form', formattedValues);
             const response = await apiCourse.addCourse({
                 course_code: formattedValues.course_code,
                 id_class: formattedValues.id_class,

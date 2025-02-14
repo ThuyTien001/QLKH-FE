@@ -8,10 +8,13 @@ import { Modal, Table } from "antd";
 import { ModalAddStudent } from "@/modal/components";
 import { BiEditAlt } from "react-icons/bi";
 import { useModal } from "@/hooks";
+import dayjs from "dayjs";
+import { ModalAddStudentFile } from "@/modal/components/modal-add-student-file";
 export const Home = () => {
   const {ModalTypeEnum, toggleModal} = useModal()
     const [course, setCourse]= useState<any[]>([]);
     const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
+    const [selectedCourseIdFile, setSelectedCourseIdFile] = useState<number | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
@@ -34,11 +37,26 @@ export const Home = () => {
         setSelectedCourseId(courseId); // Lưu Course ID được chọn
         setIsModalVisible(true); // Hiển thị Modal
       };
+      const handleOpenModalFile = (courseId: number) => {
+        setSelectedCourseIdFile(courseId);
+        setIsModalVisible(true);
+      }
     
       const handleCloseModal = () => {
         setIsModalVisible(false); // Đóng Modal
         setSelectedCourseId(null); // Reset Course ID
       };
+
+      const isNearExpiration = (record: any) => {
+        // console.log("record: ", record)
+        if(!record?.end_time){
+          return false;
+        }
+        const threeMonthLater = dayjs().add(3, "months");
+        const expirationDate = dayjs(record.end_time, "DD-MM-YYYY");
+        return expirationDate.isBefore(threeMonthLater) || expirationDate.isSame(threeMonthLater);
+        
+      }
       return(
         <div>
             <Header />
@@ -108,6 +126,7 @@ export const Home = () => {
                                   ),
                               },
                             ]}
+                            rowClassName={(record) => (isNearExpiration(record) ? "bg-yellow-100" : "")} //Tô màu vàng
                             // pagination={false}
                             // expandable={{
                             //     expandedRowRender: (record) => (
@@ -116,7 +135,7 @@ export const Home = () => {
                             //   }}
                             expandable={{
                               expandedRowRender: (record) => (
-                                <ListStudents data={record.students} onAddStudent={() => handleOpenModal(record.course_id)} />
+                                <ListStudents data={record.students} onAddStudent={() => handleOpenModal(record.course_id)} onUploadFile = {() => handleOpenModalFile(record.course_id)} />
                               ),
                               onExpand: (expanded, record) => {
                                 if (expanded) {
@@ -132,7 +151,14 @@ export const Home = () => {
                           onCancel={handleCloseModal}
                           footer={null} // Tùy chọn: Không có nút mặc định trong footer
                         >
-                          <ModalAddStudent courseId={selectedCourseId} />
+                          {/* <ModalAddStudent courseId={selectedCourseId} />
+                          <ModalAddStudentFile courseId={selectedCourseIdFile}/> */}
+                              {selectedCourseId && (
+                                  <ModalAddStudent courseId={selectedCourseId} />
+                              )}
+                              {selectedCourseIdFile && (
+                                  <ModalAddStudentFile courseId={selectedCourseIdFile} />
+                              )}
                         </Modal>
                     </div>
                 </div>

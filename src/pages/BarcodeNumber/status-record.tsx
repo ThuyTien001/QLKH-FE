@@ -1,8 +1,13 @@
 import { useModal } from "@/hooks";
 import { Table } from "antd";
+import dayjs from "dayjs";
 import { BiEditAlt } from "react-icons/bi";
 
-export const StatusRecordBarcode = ({data}: any) => {
+export const StatusRecordBarcode = ({
+    data = []
+}:{
+    data: any[]
+}) => {
     const {toggleModal, ModalTypeEnum} = useModal()
     return(
         <Table
@@ -23,6 +28,22 @@ export const StatusRecordBarcode = ({data}: any) => {
                     title: "Ngày nộp đơn",
                     dataIndex: "application_date",
                     key:"application_date",
+                },
+                {
+                    title: "Số ngày nợp đơn",
+                    dataIndex: "days_since_application",
+                    key: "days_since_appplication", 
+                    render: (_, record) => {
+                        if(!record.application_date) return "Không có dữ liệu";
+                        // chuyển đổi application_day sang ngày hợp lệ
+                        const applicationDate = dayjs(record.application_date, "DD-MM-YYYY");
+                        // Kiểm tra applicationDate có hợp lệ không
+                        if(!applicationDate.isValid()) return "Ngày không hợp lệ";
+                        
+                        const today = dayjs();
+                        const diffDays = today.diff(applicationDate, "day");
+                        return `${diffDays} ngày`
+                    }
                 },
                 {
                     title: "Số văn bằng",

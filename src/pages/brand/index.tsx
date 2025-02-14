@@ -18,6 +18,7 @@ export const Brand = () => {
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
     const[isModalVissible, setIsModalVissible] = useState(false);
+    const [filteredData, setFilteredData] = useState<any[]>([]);
     useEffect(()=>{
         const fetchData = async() =>{
             try{
@@ -25,6 +26,7 @@ export const Brand = () => {
                 // console.log("response: ", response);
                 if(response && response.data){
                     setBrand(response.data);
+                    setFilteredData(response.data);
                 }else{
                     console.error("No data found in response");
                 }
@@ -35,6 +37,9 @@ export const Brand = () => {
         fetchData();
     }, []);
 
+    const handleFilter = (filteredData: any[]) => {
+        setFilteredData(filteredData);
+    }
     const handleCloseModal = () => {
         setIsModalVissible(false);
         setModalData(null);
@@ -55,9 +60,10 @@ export const Brand = () => {
         <div>
             <Header />
             <div className="mt-4 mr-4"> 
-                <HeaderBrand />
+                <HeaderBrand data={brand} onFilter={handleFilter}/>
                 <Table 
-                dataSource={brand.map((item, index) => ({...item, key: index}))}
+                // dataSource={brand.map((item, index) => ({...item, key: index}))}
+                dataSource={(filteredData.length > 0 ? filteredData : []).map((item, index) => ({...item, key: index}))}
                     columns={[
                         {
                             title: "Mã khách hàng",
@@ -101,8 +107,8 @@ export const Brand = () => {
                             },
                             {
                                 title: "Tên đầu mối",
-                                dataIndex: "introducer",
-                                key: "introducer"
+                                dataIndex: "lp_name",
+                                key: "lp_name"
                             },
                             // {
                             //     title: "Tình trạng hoa hồng",

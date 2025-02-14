@@ -2,6 +2,7 @@ import { apiStaff } from "@/api/api-staff";
 import { Header } from "@/components"
 import { Table } from "antd"
 import { useEffect, useState } from "react"
+import { HeaderStaff } from "./header-staff";
 
 export const Staff = () => {
     const [staff, setStaff] = useState<any[]>([]);
@@ -24,6 +25,7 @@ export const Staff = () => {
         <div>
             <Header/>
             <div className="mt-4 mr-4">
+                <HeaderStaff/>
                 <Table
                 dataSource={staff}
                 columns={[

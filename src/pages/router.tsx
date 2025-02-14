@@ -10,6 +10,8 @@ import ProtectedRoute from "./protectedRoute";
 import { Patent } from "./Patent";
 import { BarcodeNumber } from "./BarcodeNumber";
 import { Copyright } from "./Copyright";
+import { LeadProvider } from "./lead-provider";
+import { Partner } from "./partner";
 
 
 export const router = createBrowserRouter([
@@ -78,6 +80,22 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <Staff/>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: "/lead-provider",
+        element: (
+            <ProtectedRoute>
+                <LeadProvider/>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: "/partner",
+        element: (
+            <ProtectedRoute>
+                <Partner/>
             </ProtectedRoute>
         )
     },

@@ -2,6 +2,7 @@ import { apiStatusRecord } from "@/api";
 import { FormStatus } from "@/type";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, message, Upload, UploadFile } from "antd"
+import dayjs from "dayjs";
 
 export const ModalAddStatusRecordPatent = ({
     record_id,
@@ -24,15 +25,18 @@ export const ModalAddStatusRecordPatent = ({
             const formattedValues = {
                 ...values,
                  record_id,
-                 application_date: values.application_date
-                    ? new Date(values.application_date).toISOString().split('T')[0]
-                    : null,
-                date_of_issuance: values.date_of_issuance
-                    ? new Date (values.date_of_issuance).toISOString().split('T')[0]
-                    : null,
-                expiration_date: values.expiration_date
-                    ? new Date(values.expiration_date).toISOString().split('T')[0]
-                    :null,
+                //  application_date: values.application_date
+                //     ? new Date(values.application_date).toISOString().split('T')[0]
+                //     : null,
+                // date_of_issuance: values.date_of_issuance
+                //     ? new Date (values.date_of_issuance).toISOString().split('T')[0]
+                //     : null,
+                // expiration_date: values.expiration_date
+                //     ? new Date(values.expiration_date).toISOString().split('T')[0]
+                //     :null,
+                application_date: values.application_date ? dayjs(values.application_date).format("YYYY-MM-DD") :null,
+                                date_of_issuance: values.date_of_issuance ? dayjs(values.date_of_issuance).format("YYYY-MM-DD") :null,
+                                expiration_date: values.expiration_date ? dayjs(values.expiration_date).format("YYYY-MM-DD") :null,
             }
             const formData = new FormData();
             formData.append("status_name", formattedValues.status_name || "");

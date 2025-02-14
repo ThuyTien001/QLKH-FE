@@ -1,5 +1,6 @@
 import { useModal } from "@/hooks";
 import { Table } from "antd"
+import dayjs from "dayjs";
 import { BiEditAlt } from "react-icons/bi";
 
 export const StatusProfileStyle = ({
@@ -11,6 +12,7 @@ export const StatusProfileStyle = ({
     const {ModalTypeEnum, toggleModal} = useModal()
     // const statusData = data || [];
     // console.log("data status:", data)
+    // console.log("data", data)
     return(
         <div>
             <div className="flex items-center justify-between w-full gap-5 mb-5">
@@ -61,6 +63,24 @@ export const StatusProfileStyle = ({
                         title: "Ngày nộp đơn",
                         dataIndex: "application_date",
                         key:"application_date",
+                    },
+                    {
+                        title: "Số ngày nộp đơn",
+                        dataIndex: "days_since_application",
+                        key: "days_since_application",
+                        render: (_, record) => {
+                            if (!record.application_date) return "Không có dữ liệu";
+                    
+                            // Chuyển đổi application_date sang ngày hợp lệ
+                            const applicationDate = dayjs(record.application_date, "DD-MM-YYYY");
+                    
+                            // Kiểm tra xem applicationDate có hợp lệ không
+                            if (!applicationDate.isValid()) return "Ngày không hợp lệ";
+                    
+                            const today = dayjs();
+                            const diffDays = today.diff(applicationDate, "day");
+                            return `${diffDays} ngày`;
+                        },
                     },
                     {
                         title: "Số văn bằng",

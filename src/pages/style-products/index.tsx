@@ -19,12 +19,14 @@ export const StyleProducts = () => {
     type ModalData = { customer_id?: number; record_id?: number } | null;
     const [modalData, setModalData] = useState<ModalData>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [filteredData, setFilteredData] = useState<any[]>([]);
     useEffect(() => {
         const fetchData = async()=>{
             try{
                 const response = await apiStyleProduct.getStyleProduct();
                 if(response && response.data){
                     setStyleproduct(response.data);
+                    setFilteredData(response.data);
                 }else{
                     console.error("No data found in response.");
                 }
@@ -34,7 +36,10 @@ export const StyleProducts = () => {
         };
         fetchData();
     }, []);
-    console.log("data Style Product: ", styleproducts);
+    const handleFilter = (filteredData: any[]) => {
+        setFilteredData(filteredData); // Cập nhật trạng thái dữ liệu đã lọc
+    };
+    // console.log("data Style Product: ", styleproducts);
     const handleCloseModal = () => {
         setIsModalVisible(false);
         setModalData(null);
@@ -55,9 +60,10 @@ export const StyleProducts = () => {
         <div>
             <Header/>
             <div className="mt-4 mr-4">
-                <HeaderStyleProducts data={styleproducts} />
+                <HeaderStyleProducts data={styleproducts} onFilter={handleFilter}  />
                 <Table
-                    dataSource={styleproducts.map((item, index) => ({ ...item, key: index }))}
+                    // dataSource={styleproducts.map((item, index) => ({ ...item, key: index }))}
+                    dataSource={(filteredData.length > 0 ? filteredData : []).map((item, index) => ({ ...item, key: index }))}
                     columns={[
                         {
                         title: "Mã khách hàng",

@@ -4,6 +4,7 @@ import { DataCourse } from '../../type/course-type';
 import moment from "moment";
 import { apiClass } from "@/api";
 import { apiCourse } from "@/api/api-course";
+import dayjs from "dayjs";
 
 export const ModalUpdateCourse = (DataCourse:DataCourse) => {
     const [form]=Form.useForm();
@@ -63,12 +64,14 @@ export const ModalUpdateCourse = (DataCourse:DataCourse) => {
                 ...value,
                 staff_id,
                 course_id: DataCourse.course_id,
-                start_time: value.start_time
-                    ? new Date(value.start_time).toISOString().split('T')[0]
-                    :null,
-                end_time: value.end_time
-                    ? new Date(value.end_time).toISOString().split('T')[0]
-                    :null,
+                // start_time: value.start_time
+                //     ? new Date(value.start_time).toISOString().split('T')[0]
+                //     :null,
+                // end_time: value.end_time
+                //     ? new Date(value.end_time).toISOString().split('T')[0]
+                //     :null,
+                start_time: value.start_time ? dayjs(value.start_time).format("YYYY-MM-DD") : null,
+                end_time: value.end_time ? dayjs(value.end_time).format("YYYY-MM-DD") : null,
             };
             // console.log('Data form: ', formattedValues);
             const response = await apiCourse.updateCourse({
