@@ -37,10 +37,10 @@ export const ModalAddProfile = ({
       form.setFieldsValue({ customer_id: customer_id });
     }
 
-    const now = new Date();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const year = String(now.getFullYear()).slice(-2);
-    form.setFieldsValue({ record_code: `KD${month}${year}` });
+    // const now = new Date();
+    // const month = String(now.getMonth() + 1).padStart(2, "0");
+    // const year = String(now.getFullYear()).slice(-2);
+    form.setFieldsValue({ record_code: `KD` });
 
     const fetchCommission = async () => {
       try {

@@ -14,10 +14,10 @@ export const ModalAddContractPatent = ({
         if(record_id){
             form.setFieldsValue({record_id: record_id})
         }
-        const now = new Date();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const year = String(now.getFullYear()).slice(-2);
-        form.setFieldsValue({contract_code: `HD${month}${year}`})
+        // const now = new Date();
+        // const month = String(now.getMonth() + 1).padStart(2, "0");
+        // const year = String(now.getFullYear()).slice(-2);
+        form.setFieldsValue({contract_code: `HD`})
     })
 
     const appendFilesToFormData = (formData: FormData, fileName:string, files?: UploadFile[])=>{

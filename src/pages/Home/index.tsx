@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { apiCourse } from "@/api/api-course";
 import { ListStudents } from "./list-students";
 import { Modal, Table } from "antd";
-import { ModalAddStudent } from "@/modal/components";
+import { ModalAddCourse, ModalAddStudent } from "@/modal/components";
 import { BiEditAlt } from "react-icons/bi";
 import { useModal } from "@/hooks";
 import dayjs from "dayjs";
@@ -15,7 +15,9 @@ export const Home = () => {
     const [course, setCourse]= useState<any[]>([]);
     const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null);
     const [selectedCourseIdFile, setSelectedCourseIdFile] = useState<number | null>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isStudentModalVisible, setIsStudentModalVisible] = useState(false);
+    const [isCourseModalVisible, setIsCourseModalVisible] = useState(false);
+    const [isStudentFileModalVisible, setIsStudentFileModalVisible] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -35,17 +37,25 @@ export const Home = () => {
       const handleOpenModal = (courseId: number) => {
         console.log("Opening Modal with Course ID:", courseId);
         setSelectedCourseId(courseId); // Lưu Course ID được chọn
-        setIsModalVisible(true); // Hiển thị Modal
+        setIsStudentModalVisible(true); // Hiển thị Modal
       };
       const handleOpenModalFile = (courseId: number) => {
         setSelectedCourseIdFile(courseId);
-        setIsModalVisible(true);
+        setIsStudentFileModalVisible(true);
       }
+      const handleCloseStudentModal = () => {
+        setIsStudentModalVisible(false);
+        setSelectedCourseId(null);
+    };
     
-      const handleCloseModal = () => {
-        setIsModalVisible(false); // Đóng Modal
-        setSelectedCourseId(null); // Reset Course ID
-      };
+    const handleCloseStudentFileModal = () => {
+        setIsStudentFileModalVisible(false);
+        setSelectedCourseIdFile(null);
+    };
+    
+    const handleCloseCourseModal = () => {
+      setIsCourseModalVisible(false);
+  };
 
       const isNearExpiration = (record: any) => {
         // console.log("record: ", record)
@@ -57,6 +67,22 @@ export const Home = () => {
         return expirationDate.isBefore(threeMonthLater) || expirationDate.isSame(threeMonthLater);
         
       }
+      // Hàm thêm lớp học mới vào danh sách
+      const addCourseToList = (newCourse: any) => {
+        setCourse((prevCourses) => [...prevCourses, newCourse]);
+    };
+    const fetchCourses = async () => {
+      try {
+        const response = await apiCourse.getAllCourse();
+        if (response && response.data) {
+          setCourse(response.data);
+        } else {
+          console.error("No data found in response.");
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
       return(
         <div>
             <Header />
@@ -66,7 +92,7 @@ export const Home = () => {
                 </div>
                 <div className="basis-4/5 ml-3">
                     <div>
-                        <HeaderHome/>
+                        <HeaderHome openAddCourseModal={() => setIsCourseModalVisible(true)}/>
                     </div>
                     <div>
                         <Table
@@ -146,13 +172,11 @@ export const Home = () => {
                             }}
                         />
                         {/* Modal hiển thị thêm học viên */}
-                        <Modal
+                        {/* <Modal
                           visible={isModalVisible}
                           onCancel={handleCloseModal}
                           footer={null} // Tùy chọn: Không có nút mặc định trong footer
                         >
-                          {/* <ModalAddStudent courseId={selectedCourseId} />
-                          <ModalAddStudentFile courseId={selectedCourseIdFile}/> */}
                               {selectedCourseId && (
                                   <ModalAddStudent courseId={selectedCourseId} />
                               )}
@@ -160,6 +184,35 @@ export const Home = () => {
                                   <ModalAddStudentFile courseId={selectedCourseIdFile} />
                               )}
                         </Modal>
+                        <Modal title="Thêm Khóa học" open={isModalVisible} onCancel={() => setIsModalVisible(false)} footer={null}>
+                          <ModalAddCourse fetchCourses={fetchCourses} addCourseToList={addCourseToList} onClose={() => setIsModalVisible(false)}/>
+                      </Modal> */}
+                      <Modal
+                        visible={isStudentModalVisible}
+                        onCancel={handleCloseStudentModal}
+                        footer={null}
+                      >
+                        {selectedCourseId && <ModalAddStudent fetchStudent={fetchCourses} courseId={selectedCourseId} onAddStudent={handleOpenModal} onClose={handleCloseStudentModal}/>}
+                      </Modal>
+
+                      {/* Modal Thêm File Học Viên */}
+                      <Modal
+                        visible={isStudentFileModalVisible}
+                        onCancel={handleCloseStudentFileModal}
+                        footer={null}
+                      >
+                        {selectedCourseIdFile && <ModalAddStudentFile courseId={selectedCourseIdFile} />}
+                      </Modal>
+
+                      {/* Modal Thêm Khóa Học */}
+                      <Modal 
+                        title="Thêm Khóa học" 
+                        open={isCourseModalVisible} 
+                        onCancel={handleCloseCourseModal} 
+                        footer={null}
+                      >
+                        <ModalAddCourse fetchCourses={fetchCourses} addCourseToList={addCourseToList} onClose={handleCloseCourseModal}/>
+                      </Modal>
                     </div>
                 </div>
             </div>

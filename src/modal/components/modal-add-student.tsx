@@ -1,28 +1,32 @@
 import { apiParticipant, apiProvinces, apiStudents } from "@/api";
 import { Button, DatePicker, Form, Input, message, Select } from "antd"
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 interface ModalAddStudentProps {
     courseId: number | null; // Nhận Course ID từ props
+    onAddStudent: (studentData: any) => void;
+    fetchStudent: () => void;
+    onClose: () => void;
   }     
 
-export const ModalAddStudent: React.FC<ModalAddStudentProps> = ({ courseId }) =>{
-    console.log("Course Id", courseId);
+export const ModalAddStudent: React.FC<ModalAddStudentProps> = ({ courseId, onAddStudent, fetchStudent, onClose }) =>{
+    // console.log("Course Id", courseId);
     const [form] = Form.useForm();
     const [cities, settCity] = useState<any[]>([]);
     const [districts, setDistricts] = useState<any[]>([]);
     const [wards, setWards] = useState<any[]>([]);
     const [participant, setParticipant] = useState<any[]>([]);
-    useEffect(() => {
-        if (courseId) {
-          form.setFieldsValue({ course_id: courseId });
-        }
-        const now = new Date();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const year = String (now.getFullYear()).slice(-2);
-        form.setFieldsValue({student_code: `HV${month}${year}`});
+    // useEffect(() => {
+    //     if (courseId) {
+    //       form.setFieldsValue({ course_id: courseId });
+    //     }
+    //     const now = new Date();
+    //     const month = String(now.getMonth() + 1).padStart(2, "0");
+    //     const year = String (now.getFullYear()).slice(-2);
+    //     form.setFieldsValue({student_code: `HV${month}${year}`});
         
-      }, [courseId, form]);
+    //   }, [courseId, form]);
       useEffect(() =>{
         const fetchCities = async() =>{
             try{
@@ -93,9 +97,10 @@ export const ModalAddStudent: React.FC<ModalAddStudentProps> = ({ courseId }) =>
             ...rest,
             courseId,
             fullAddress,
-            birthday: rest.birthday
-                ? new Date(rest.birthday).toISOString().split('T')[0]
-                : null
+            // birthday: rest.birthday
+            //     ? new Date(rest.birthday).toISOString().split('T')[0]
+            //     : null
+            birthday: rest.birthday ? dayjs(rest.birthday).format("YYYY-MM-DD") : null
         }
         // console.log("full address", fullAddress);
         // console.log("Data submit", dataSubmit)
@@ -116,7 +121,10 @@ const response = await apiStudents.addStudent({
         if(response && response.success){
             message.success("Thêm học viên thành công");
             form.resetFields();
-            window.location.reload();
+            // window.location.reload();
+            onAddStudent(response.data);
+            fetchStudent();
+            onClose();
         }else{
             message.error(response.data.message || "Thêm học viên thất bại");
 
@@ -146,7 +154,7 @@ const response = await apiStudents.addStudent({
                 label="Mã học viên"
                 name="student_code"
             >
-                <Input disabled />
+                <Input />
             </Form.Item>
             <Form.Item 
                 label="Họ tên học viên"

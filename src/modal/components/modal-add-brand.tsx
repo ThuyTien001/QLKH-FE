@@ -9,7 +9,7 @@ export const ModalAddBrand = () => {
                 label="Mã khách hàng"
                 name="customer_code"
             >
-                <Input disabled/>
+                <Input/>
             </Form.Item>
             <Form.Item 
                 label="Tên người liên hệ"

@@ -5,10 +5,13 @@ import styled from "styled-components";
 import { useModal } from "@/hooks";
 import { useEffect, useState } from "react";
 import { apiClass } from "@/api";
+import { ClassData } from "@/type";
+import { ModalAddClass } from "@/modal/components";
 
 export const NavMenu = () => {
-    const{toggleModal, ModalTypeEnum} = useModal();
+    // const{toggleModal, ModalTypeEnum} = useModal();
     const [classes, setClasses] = useState<any[]>([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -25,6 +28,10 @@ export const NavMenu = () => {
       
         fetchData();
       }, []);
+      // Hàm cập nhật danh sách ngay lập tức sau khi thêm
+    const addClassToList = (newClass: ClassData) => {
+        setClasses((prevClasses) => [...prevClasses, newClass]);
+    };
     return (
         <div>
             <div className="flex justify-center p-5 border-b">
@@ -45,10 +52,11 @@ export const NavMenu = () => {
                                 <p className="text-[#757B8C] text-base font-semibold">Lớp tập huấn</p>
                                 <IoIosAdd className=" text-xl" 
                                     onClick={() => {
-                                        toggleModal({
-                                            title: "Thêm lớp học mới",
-                                            type: ModalTypeEnum.MODAL_ADD_CLASS
-                                        })
+                                        setIsModalVisible(true)
+                                        // toggleModal({
+                                        //     title: "Thêm lớp học mới",
+                                        //     type: ModalTypeEnum.MODAL_ADD_CLASS
+                                        // })
                                     }}
                                 />
                             </div>
@@ -64,6 +72,11 @@ export const NavMenu = () => {
                     </Menu.SubMenu>
                 </CsMenu>
             </nav>
+            <ModalAddClass
+                isVisible={isModalVisible}
+                onClose={() => setIsModalVisible(false)}
+                addClassToList={addClassToList} // Truyền hàm cập nhật danh sách
+            />
         </div>
     )
 };

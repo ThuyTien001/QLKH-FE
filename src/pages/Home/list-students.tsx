@@ -10,7 +10,7 @@ export const ListStudents = ({
     onUploadFile,
   }: {
     data: any[];
-    onAddStudent: () => void;
+    onAddStudent: (newStudent: any) => void;
     onUploadFile: () => void // Callback được truyền từ Home
   })  => {
     // console.log("student", data);
@@ -41,7 +41,7 @@ export const ListStudents = ({
                             className="flex items-center gap-2"
                             onClick={() => {
                                 
-                                onAddStudent();
+                                onAddStudent(data);
                             }}
                         >
                             <p className="text-white">Thêm mới</p>

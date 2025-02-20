@@ -4,10 +4,16 @@ import { DataCourse } from "@/type";
 import { Button, DatePicker, Form, Input, message, Select } from "antd"
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+interface ModalAddCourseProp{
+    // isVisible: boolean;
+    onClose: () =>void;
+    addCourseToList: (newCourse: DataCourse) => void;
+    fetchCourses: () => void;
+}
 
-export const ModalAddCourse = () => {
+export const ModalAddCourse = ({ onClose, addCourseToList, fetchCourses}: ModalAddCourseProp) => {
     const [form]=Form.useForm();
-
+    const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState<any[]>([]);
     useEffect(() => {
         const fetchData = async () => {
@@ -26,15 +32,18 @@ export const ModalAddCourse = () => {
         fetchData();
     }, []);
 
-      useEffect(() => {
-        const now = new Date();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const year = String(now.getFullYear()).slice(-2);
-        form.setFieldsValue({ course_code: `KH${month}${year}` });
-    }, [form]);
+    //   useEffect(() => {
+    //     const now = new Date();
+    //     const month = String(now.getMonth() + 1).padStart(2, "0");
+    //     const year = String(now.getFullYear()).slice(-2);
+    //     form.setFieldsValue({ course_code: `KH${month}${year}` });
+    // }, [form]);
 
       const onFinish= async (values: DataCourse) => {
         try{
+
+            setLoading(true);
+
             //lấy token
 
             const token = localStorage.getItem('token');
@@ -64,7 +73,7 @@ export const ModalAddCourse = () => {
                 //     ? new Date(values.end_time).toISOString().split('T')[0]
                 //     : null,
                 start_time: values.start_time ? dayjs(values.start_time).format("YYYY-MM-DD") : null,
-            end_time: values.end_time ? dayjs(values.end_time).format("YYYY-MM-DD") : null,
+                end_time: values.end_time ? dayjs(values.end_time).format("YYYY-MM-DD") : null,
             };
             // console.log('Data form', formattedValues);
             const response = await apiCourse.addCourse({
@@ -79,7 +88,17 @@ export const ModalAddCourse = () => {
             if(response && response.success){
                 message.success('Thêm khóa học thành công');
                 form.resetFields();
-                window.location.reload();
+                fetchCourses();
+                // window.location.reload();
+                // addCourseToList(response);
+                // onClose();
+                // Gọi lại API để lấy danh sách mới
+                    // const updatedCourses = await apiCourse.getAllCourse();
+                    // if (updatedCourses && updatedCourses.data) {
+                    //     addCourseToList(updatedCourses.data);
+                    // }
+
+                    onClose();
             }else{
                 message.error(response.data.message || "Thêm khóa học thất bại");
             }
@@ -95,47 +114,49 @@ export const ModalAddCourse = () => {
                 console.error("Lỗi không xác định", error);
                 message.error("Thêm khóa học thất bại");
             }
+        }finally{
+            setLoading(false);
         }
         
       }
     return (
-        <Form 
-            form={form}
-            onFinish={onFinish}
-            layout="vertical"
-        >
-            <Form.Item
-                label="Mã khóa học"
-                name="course_code"
+            <Form 
+                form={form}
+                onFinish={onFinish}
+                layout="vertical"
             >
-                <Input disabled />
-            </Form.Item>
-            <Form.Item name="id_class" label="Tên lớp học">
-                <Select>
-                    {classes.map((classItem) => (
-                        <Select.Option key={classItem.id_class} value={classItem.id_class}>
-                            {classItem.class_name}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
-            <div className="flex justify-between">
-                <Form.Item name="start_time" label="Ngày bắt đầu"
-                    rules={[{required: true, message: "Vui lòng chọn ngày bắt đầu"}]}
+                <Form.Item
+                    label="Mã khóa học"
+                    name="course_code"
                 >
-                <DatePicker />
+                    <Input  />
                 </Form.Item>
-                <Form.Item name="end_time" label="Ngày kết thúc"
-                    rules={[{required: true, message: "Vui lòng chọn ngày kết thúc"}]}
-                >
+                <Form.Item name="id_class" label="Tên lớp học">
+                    <Select>
+                        {classes.map((classItem) => (
+                            <Select.Option key={classItem.id_class} value={classItem.id_class}>
+                                {classItem.class_name}
+                            </Select.Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+                <div className="flex justify-between">
+                    <Form.Item name="start_time" label="Ngày bắt đầu"
+                        rules={[{required: true, message: "Vui lòng chọn ngày bắt đầu"}]}
+                    >
                     <DatePicker />
-                </Form.Item>                
-            </div>
-            <Form.Item >
-                <Button type="primary" htmlType="submit" className="w-full" style={{ color: "white" }}>
-                    Thêm
-                </Button>
-            </Form.Item>
-        </Form>
+                    </Form.Item>
+                    <Form.Item name="end_time" label="Ngày kết thúc"
+                        rules={[{required: true, message: "Vui lòng chọn ngày kết thúc"}]}
+                    >
+                        <DatePicker />
+                    </Form.Item>                
+                </div>
+                <Form.Item >
+                    <Button type="primary" htmlType="submit" loading={loading} className="w-full" style={{ color: "white" }}>
+                        Thêm
+                    </Button>
+                </Form.Item>
+            </Form>
     )
 }

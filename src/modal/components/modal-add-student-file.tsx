@@ -1,4 +1,3 @@
-import { apiParticipant, apiStudents } from "@/api";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Upload } from "antd";
 import React, { useState } from "react";
@@ -66,7 +65,7 @@ export const ModalAddStudentFile: React.FC<ModalAddStudentFileProps> = ({courseI
         try {
             const response = await fetch("http://localhost:5000/api/participant");
             const data = await response.json();
-            console.log("Dữ liệu participant từ API:", data); // Debug dữ liệu trả về
+            // console.log("Dữ liệu participant từ API:", data); // Debug dữ liệu trả về
             return data;
         } catch (error) {
             console.error("Lỗi fetch participants:", error);
@@ -101,7 +100,7 @@ export const ModalAddStudentFile: React.FC<ModalAddStudentFileProps> = ({courseI
             participant_id: participantMap.get(student["Đối tượng"]) || null,
             course_id: courseId
         }))
-        console.log("Dữ liệu sau khi xử lý:", processedData);
+        // console.log("Dữ liệu sau khi xử lý:", processedData);
 
     // Gửi dữ liệu lên API
     submitStudents(processedData);

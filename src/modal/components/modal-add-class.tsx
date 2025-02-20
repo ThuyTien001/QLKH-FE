@@ -1,12 +1,19 @@
 import { apiClass } from "@/api";
 import { ClassData } from "@/type";
-import { Button, Form, Input, message } from "antd";
-export const ModalAddClass = () => {
+import { Button, Form, Input, message, Modal } from "antd";
+import { useState } from "react";
+interface ModalAddClassProps {
+    isVisible: boolean;
+    onClose: () => void;
+    addClassToList: (newClass: ClassData) => void;
+}
+export const ModalAddClass = ({ isVisible, onClose, addClassToList }: ModalAddClassProps) => {
     const [form] = Form.useForm(); 
-
+    const [loading, setLoading] = useState(false);
 
     const onFinish = async (values: ClassData) => {
         try {
+            setLoading(true);
             // Chuyển timelimit sang số và kiểm tra tính hợp lệ
             const timelimit = parseFloat(values.timelimit as unknown as string);
 
@@ -30,7 +37,9 @@ export const ModalAddClass = () => {
             if (response && response.result.success) {
                 message.success("Thêm lớp học thành công!");
                 form.resetFields();
-                window.location.reload()
+                // window.location.reload()
+                addClassToList({ class_name: values.class_name, timelimit }); // Cập nhật danh sách ngay lập tức
+                onClose(); // Đóng modal
             }else{
                 message.error(response.message || "Thêm lớp học thất bại");
             }
@@ -44,34 +53,38 @@ export const ModalAddClass = () => {
                 console.error("Lỗi không xác định:", error);
                 message.error("Thêm lớp học thất bại.");
             }
+        }finally {
+            setLoading(false);
         }
     };
     return (
-        <Form
-            form={form}
-            onFinish={onFinish}
-            layout="vertical"
-        >
-            <Form.Item 
-                label="Tên lớp học"
-                name="class_name"
-                rules={[{ required: true, message: "Vui lòng nhập tên lớp học!" }]}
+        <Modal title="Thêm lớp học" open={isVisible} onCancel={onClose} footer={null}>
+            <Form
+                form={form}
+                onFinish={onFinish}
+                layout="vertical"
             >
-                <Input />
-            </Form.Item>
-            <Form.Item
-                label="Thời hạn"
-                name="timelimit"
-            >
-                <Input type="float" min={1} />
-            </Form.Item>
-            <Form.Item 
-            >
-                <Button type="primary" htmlType="submit" className="w-full" style={{ color: "white" }}>
-                    Thêm
-                </Button>
-            </Form.Item>
+                <Form.Item 
+                    label="Tên lớp học"
+                    name="class_name"
+                    rules={[{ required: true, message: "Vui lòng nhập tên lớp học!" }]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    label="Thời hạn"
+                    name="timelimit"
+                >
+                    <Input type="float" min={1} />
+                </Form.Item>
+                <Form.Item 
+                >
+                    <Button type="primary" htmlType="submit" loading={loading} className="w-full" style={{ color: "white" }}>
+                        Thêm
+                    </Button>
+                </Form.Item>
 
-        </Form>
+            </Form>
+        </Modal>
     )
 }

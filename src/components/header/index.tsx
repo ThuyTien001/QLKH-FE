@@ -4,6 +4,8 @@ import { LuLogOut } from 'react-icons/lu';
 import { Link, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { useModal } from '@/hooks';
+import { imgLogo } from '@/assets';
+// import { logocasti } from '@/assets';
 // import styled from 'styled-components';
 
 
@@ -18,7 +20,7 @@ export const Header = () => {
             <div className="flex flex-row items-center">
                 <div className="basis-2/5 flex items-center">
                     <a href="#" className="text-[#171725] font-extrabold text-2xl">
-                        {/* <img className="w-10 h-10" src={imgLogo} alt={imgLogo} /> */}
+                        <img className="w-20" src={imgLogo} alt={imgLogo} />
                     </a>
                     {/* <div className="items-center ml-12 flex">
                         <CsInput

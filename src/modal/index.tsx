@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Tooltip } from "antd";
 import { VscClose } from "react-icons/vsc";
-import { ModalAccount, ModalAddBrand, ModalAddClass, ModalAddContract, ModalAddCourse, ModalAddLeadProvider, ModalAddPartner, ModalAddProfile, ModalAddProfileBrand, ModalAddProfilePatent, ModalAddProfileStyle, ModalAddRecordBarcode, ModalAddRecordCopyright, ModalAddStaff, ModalAddStatusRecordBarcode, ModalAddStatusRecordStyle, ModalAddStudent, ModalCreate, ModaleUpdateProfileBrand, ModalUpdateContract, ModalUpdateCourse, ModalUpdateCustomer, ModalUpdateLeadProvider, ModalUpdatePartner, ModalUpdateProfile, ModalUpdateProfilePatent, ModalUpdateRecordBarcode, ModalUpdateStatusBrand, ModalUpdateStatusProfile, ModalUpdateStudent } from "./components";
+import { ModalAccount, ModalAddBrand, ModalAddClass, ModalAddContract, ModalAddCourse, ModalAddCusstomerFile, ModalAddLeadProvider, ModalAddLeadProviderFile, ModalAddPartner, ModalAddPartnerFile, ModalAddProfile, ModalAddProfileBrand, ModalAddProfilePatent, ModalAddProfileStyle, ModalAddRecordBarcode, ModalAddRecordCopyright, ModalAddStaff, ModalAddStatusRecordBarcode, ModalAddStatusRecordStyle, ModalAddStudent, ModalCreate, ModaleUpdateProfileBrand, ModalUpdateContract, ModalUpdateCourse, ModalUpdateCustomer, ModalUpdateLeadProvider, ModalUpdatePartner, ModalUpdateProfile, ModalUpdateProfilePatent, ModalUpdateRecordBarcode, ModalUpdateStatusBrand, ModalUpdateStatusProfile, ModalUpdateStudent } from "./components";
 import { ModalTypeEnum } from "@/constant";
 import { useModal } from "@/hooks";
 
@@ -69,6 +69,12 @@ const checkModal = (modalType: string) => {
             return ModalAddPartner;
         case ModalTypeEnum.MODAL_UPDATE_PARTNER:
             return ModalUpdatePartner;
+        case ModalTypeEnum.MODAL_ADD_CUSTOMER_FILE:
+            return ModalAddCusstomerFile;
+        case ModalTypeEnum.MODAL_ADD_PARTNER_FILE:
+            return ModalAddPartnerFile;
+        case ModalTypeEnum.MODAL_ADD_LEAD_PROVIDER_FILE:
+            return ModalAddLeadProviderFile;
         default:
             return null;
     }

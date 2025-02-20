@@ -3,7 +3,7 @@ import iconFacebook from "./icon-facebook.svg";
 import imgCarouselLogin1 from "./carousel-login-1.png";
 import imgCarouselLogin2 from "./carousel-login-2.png";
 import imgCarouselLogin3 from "./carousel-login-3.png";
-import imgLogo from "./logo.jpg";
+import imgLogo from "./logocasti.png";
 import { IconTypeProduction } from "./icon-type-production";
 import { IconInventory } from "./icon-inventory";
 import { IconSupplier } from "./icon-supplier";

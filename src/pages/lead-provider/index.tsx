@@ -33,12 +33,12 @@ export const LeadProvider = () => {
                     dataSource={leadProvider}
                     columns={[
                         {
-                            title: "Mã đối tác",
+                            title: "Mã đầu mối",
                             dataIndex: "lp_code",
                             key: "lp_code"
                         },
                         {
-                            title: "Tên đối tác",
+                            title: "Tên đầu mối",
                             dataIndex: "lp_name",
                             key: "lp_name",
                         },

@@ -12,10 +12,10 @@ export const ModalAddProfileStyle = () => {
     const [partner, setPartner] = useState<any[]>([]);
 
     useEffect(() => {
-        const now = new Date();
-        const month = String(now.getMonth()+1).padStart(2, "0");
-        const year = String(now.getFullYear()).slice(-2);
-        form.setFieldsValue({customer_code: `KH${month}${year}`});
+        // const now = new Date();
+        // const month = String(now.getMonth()+1).padStart(2, "0");
+        // const year = String(now.getFullYear()).slice(-2);
+        form.setFieldsValue({customer_code: `KH`});
 
         //get cities
 
@@ -157,7 +157,7 @@ export const ModalAddProfileStyle = () => {
                 label="Mã khách hàng"
                 name="customer_code"
             >
-                <Input disabled/>
+                <Input/>
             </Form.Item>
             <Form.Item 
                 label="Tên người liên hệ"
