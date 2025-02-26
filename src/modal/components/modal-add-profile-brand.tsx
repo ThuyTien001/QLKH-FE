@@ -15,13 +15,13 @@ export const ModalAddProfileBrand =({
             // console.log("Customer Id: ", customer_id);
 
             useEffect(() => {
-                if(customer_id){
-                    form.setFieldsValue({customer_id: customer_id});
-                }
-                // const now = new Date();
-                // const month = String(now.getMonth() + 1).padStart(2, "0");
-                // const year = String(now.getFullYear()).slice(-2);
-                form.setFieldsValue({record_code: `NH`});
+                // if(customer_id){
+                //     form.setFieldsValue({customer_id: customer_id});
+                // }
+                // // const now = new Date();
+                // // const month = String(now.getMonth() + 1).padStart(2, "0");
+                // // const year = String(now.getFullYear()).slice(-2);
+                // form.setFieldsValue({record_code: `NH`});
 
                 const fetchCommission = async () =>{
                     try{
@@ -97,7 +97,7 @@ export const ModalAddProfileBrand =({
             onFinish={onFinish}
         >
             <Form.Item label="Mã hồ sơ" name="record_code">
-                <Input disabled/>
+                <Input/>
             </Form.Item>
                 <Form.Item
                     label="Đơn"
@@ -184,9 +184,9 @@ export const ModalAddProfileBrand =({
                 name="business_license"
                 valuePropName="fileList"
                 getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
-                rules={[
-                    { required: true, message: "Vui lòng cung cấp giấy phép kinh doanh" },
-                ]}
+                // rules={[
+                //     { required: true, message: "Vui lòng cung cấp giấy phép kinh doanh" },
+                // ]}
             >
                 <Upload 
                     beforeUpload={() => false} // Prevents automatic upload

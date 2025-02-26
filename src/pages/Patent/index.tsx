@@ -11,13 +11,16 @@ import { IoIosAdd } from "react-icons/io";
 import { ContractPatent } from "./contract";
 import { ModalAddContractPatent } from "@/modal/components/modal-add-contract-patent";
 import dayjs from "dayjs";
+import { ModalAddStatusRecordPatent } from "@/modal/components";
 
 export const Patent = () => {
     const {toggleModal, ModalTypeEnum} = useModal();
     const [patent, setPatent] = useState<any[]>([]);
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
-    const [isModalVissible, setIsModalVissible] = useState(false);
+    // const [isModalVissible, setIsModalVissible] = useState(false);
+    const [isContractModalVisible, setIsContractModalVisible] = useState(false);
+    const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     useEffect(() => {
         const fetchData = async() =>{
@@ -40,14 +43,23 @@ export const Patent = () => {
         setFilteredData(filteredData);
     };
 
-    const handleCloseModal = () => {
-        setIsModalVissible(false);
+    const handleCloseModalStatus = () => {
+        setIsStatusModalVisible(false);
         setModalData(null);
     }
 
     const handleOpenModalStatus = (record_id: number) =>{
         setModalData({record_id});
-        setIsModalVissible(true);
+        setIsStatusModalVisible(true);
+    }
+    const handleCloseModalContract = () => {
+        setIsContractModalVisible(false);
+        setModalData(null);
+    }
+
+    const handleOpenModalContract = (record_id: number) =>{
+        setModalData({record_id});
+        setIsContractModalVisible(true);
     }
     const isNearExpiration = (record: any) => {
         const sixMonthsLater = dayjs().add(6, "months");
@@ -195,7 +207,7 @@ export const Patent = () => {
                                                                 <div className="flex gap-5">
                                                                     <Button type="primary"
                                                                         onClick={() => {
-                                                                            handleOpenModalStatus(profile.record_id)
+                                                                            handleOpenModalContract(profile.record_id)
                                                                         }}
                                                                     >
                                                                         <p className="text-white">Thêm mới</p>
@@ -214,8 +226,8 @@ export const Patent = () => {
                                     ]}
                                 />
                                 <Modal 
-                                    visible={isModalVissible}
-                                    onCancel={handleCloseModal}
+                                    visible={isContractModalVisible}
+                                    onCancel={handleCloseModalContract}
                                     footer={null}
                                 >
                                     {/* {modalData?.customer_id && (
@@ -223,6 +235,18 @@ export const Patent = () => {
                                     )} */}
                                     {modalData?.record_id && (
                                         <ModalAddContractPatent record_id={modalData.record_id} />
+                                    )}
+                                </Modal>
+                                <Modal 
+                                    visible={isStatusModalVisible}
+                                    onCancel={handleCloseModalStatus}
+                                    footer={null}
+                                >
+                                    {/* {modalData?.customer_id && (
+                                        <ModalAddProfilePatent customer_id={modalData.customer_id}/>
+                                    )} */}
+                                    {modalData?.record_id && (
+                                        <ModalAddStatusRecordPatent record_id={modalData.record_id} />
                                     )}
                                 </Modal>
                             </div>

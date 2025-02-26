@@ -8,7 +8,7 @@ import { apiBrand } from "@/api"
 import { BiEditAlt } from "react-icons/bi"
 import { useModal } from "@/hooks"
 import { IoIosAdd } from 'react-icons/io';
-import { ModalAddContractBrand, } from "@/modal/components"
+import { ModalAddContractBrand, ModalAddStatusRecordBrand, } from "@/modal/components"
 import { ContractBrand } from "./contract"
 import dayjs from "dayjs"
 
@@ -17,7 +17,9 @@ export const Brand = () => {
     const [brand, setBrand] = useState<any[]>([]);
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
-    const[isModalVissible, setIsModalVissible] = useState(false);
+    // const[isModalVissible, setIsModalVissible] = useState(false);
+    const [isContractModalVisible, setIsContractModalVisible] = useState(false);
+    const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     useEffect(()=>{
         const fetchData = async() =>{
@@ -41,12 +43,12 @@ export const Brand = () => {
         setFilteredData(filteredData);
     }
     const handleCloseModal = () => {
-        setIsModalVissible(false);
+        setIsStatusModalVisible(false);
         setModalData(null);
     }
     const handleOpenModalStatus = (record_id: number) => {
         setModalData({record_id});
-        setIsModalVissible(true);
+        setIsContractModalVisible(true);
     }
     // console.log("Data brand", brand);
     const isNearExpiration = (record: any) => {
@@ -223,12 +225,23 @@ export const Brand = () => {
                     }}
                 />
                 <Modal 
-                    visible={isModalVissible}
+                    visible={isContractModalVisible}
                     onCancel={handleCloseModal}
                     footer={null}
                 >
+
                     {modalData?.record_id && (
                         <ModalAddContractBrand record_id={modalData.record_id} />
+                    )}
+                </Modal>
+                <Modal 
+                    visible={isStatusModalVisible}
+                    onCancel={handleCloseModal}
+                    footer={null}
+                >
+
+                    {modalData?.record_id && (
+                        <ModalAddStatusRecordBrand record_id={modalData.record_id} />
                     )}
                 </Modal>
             </div>

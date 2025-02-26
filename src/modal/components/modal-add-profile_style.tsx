@@ -15,7 +15,7 @@ export const ModalAddProfileStyle = () => {
         // const now = new Date();
         // const month = String(now.getMonth()+1).padStart(2, "0");
         // const year = String(now.getFullYear()).slice(-2);
-        form.setFieldsValue({customer_code: `KH`});
+        // form.setFieldsValue({customer_code: `KH`});
 
         //get cities
 
@@ -162,7 +162,7 @@ export const ModalAddProfileStyle = () => {
             <Form.Item 
                 label="Tên người liên hệ"
                 name="customer_name"
-                rules={[{required: true, message: "Vui lòng nhập tên người liên hệ"}]}
+                // rules={[{required: true, message: "Vui lòng nhập tên người liên hệ"}]}
             >
                 <Input/>
             </Form.Item>
@@ -183,17 +183,17 @@ export const ModalAddProfileStyle = () => {
             <Form.Item 
                 label="Kiểu dáng"
                 name="object_name"
-                rules={[{required: true, message: "Vui lòng nhập kiểu dáng"}]}
+                // rules={[{required: true, message: "Vui lòng nhập kiểu dáng"}]}
             >
                 <Input/>
             </Form.Item>
             <Form.Item 
                 label="Số điện thoại"
                 name="phone"
-                rules={[{
-                    required: true, message: "Vui lòng nhập số điện thoại"},
-                    { pattern: /^[0-9]{10}$/, message: "Số điện thoại phải là 10 chữ số" },
-                ]}
+                // rules={[{
+                //     required: true, message: "Vui lòng nhập số điện thoại"},
+                //     { pattern: /^[0-9]{10}$/, message: "Số điện thoại phải là 10 chữ số" },
+                // ]}
                 
             >
                 <Input/>
@@ -201,14 +201,14 @@ export const ModalAddProfileStyle = () => {
             <Form.Item 
                 label="Email"
                 name="email"
-                rules={[{required: true, message: "Vui lòng nhập địa chỉ email"}]}
+                // rules={[{required: true, message: "Vui lòng nhập địa chỉ email"}]}
             >
                 <Input/>
             </Form.Item>
             <Form.Item 
                 label="Địa chỉ"
                 name="address"
-                rules={[{required: true, message: "Vui lòng nhập địa chỉ"}]}
+                // rules={[{required: true, message: "Vui lòng nhập địa chỉ"}]}
             >
                 <Input/>
             </Form.Item>

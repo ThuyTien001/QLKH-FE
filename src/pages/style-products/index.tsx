@@ -12,13 +12,16 @@ import { IoIosAdd } from "react-icons/io";
 import { ContractStyleProduct } from "./contract";
 import { ModalAddContractStyleProduct } from "@/modal/components/modal-add-contract-styleproduct";
 import dayjs from "dayjs";
+import { ModalAddStatusRecordStyle } from "@/modal/components";
 
 export const StyleProducts = () => {
     const {toggleModal, ModalTypeEnum} = useModal();
     const [styleproducts, setStyleproduct] = useState<any[]>([]);
     type ModalData = { customer_id?: number; record_id?: number } | null;
     const [modalData, setModalData] = useState<ModalData>(null);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    // const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isContractModalVisible, setIsContractModalVisible] = useState(false);
+    const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     useEffect(() => {
         const fetchData = async()=>{
@@ -40,14 +43,23 @@ export const StyleProducts = () => {
         setFilteredData(filteredData); // Cập nhật trạng thái dữ liệu đã lọc
     };
     // console.log("data Style Product: ", styleproducts);
-    const handleCloseModal = () => {
-        setIsModalVisible(false);
+    const handleCloseModalStatus = () => {
+        setIsStatusModalVisible(false);
         setModalData(null);
     }
 
     const handleOpenModalStatus = (record_id: number) => {
         setModalData({record_id});
-        setIsModalVisible(true);
+        setIsStatusModalVisible(true);
+    }
+    const handleCloseModalContract = () => {
+        setIsStatusModalVisible(false);
+        setModalData(null);
+    }
+
+    const handleOpenModalContract = (record_id: number) => {
+        setModalData({record_id});
+        setIsStatusModalVisible(true);
     }
     const isNearExpiration = (record: any) => {
         const sixMonthsLater = dayjs().add(6, "months");
@@ -222,8 +234,8 @@ export const StyleProducts = () => {
                     }}
                 />
                 <Modal
-                    visible={isModalVisible}
-                    onCancel={handleCloseModal}
+                    visible={isContractModalVisible}
+                    onCancel={handleCloseModalContract}
                     // centered
                     footer={null}
                     // destroyOnClose
@@ -231,6 +243,18 @@ export const StyleProducts = () => {
                     
                     {modalData?.record_id && (
                         <ModalAddContractStyleProduct record_id={modalData.record_id } />
+                    )}
+                </Modal>
+                <Modal
+                    visible={isStatusModalVisible}
+                    onCancel={handleCloseModalStatus}
+                    // centered
+                    footer={null}
+                    // destroyOnClose
+                >
+                    
+                    {modalData?.record_id && (
+                        <ModalAddStatusRecordStyle record_id={modalData.record_id } />
                     )}
                 </Modal>
 

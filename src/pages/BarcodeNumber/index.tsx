@@ -8,7 +8,7 @@ import { apiBarcode } from "@/api/api-barcode"
 import { RecordBarcode } from "./record"
 import { IoIosAdd } from "react-icons/io"
 import { StatusRecordBarcode } from "./status-record"
-import { ModalAddContractBarcode } from "@/modal/components"
+import { ModalAddContractBarcode, ModalAddStatusRecordBarcode } from "@/modal/components"
 import { ContractBarcode } from "./contract"
 import dayjs from "dayjs"
 
@@ -17,7 +17,9 @@ export const BarcodeNumber = () =>{
     const [barcode, setBarcode] = useState<any[]>([]);
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
-    const [isModalVissibe, setIsModalVissible] = useState(false);
+    // const [isModalVissibe, setIsModalVissible] = useState(false);
+    const [isContractModalVisible, setIsContractModalVisible] = useState(false);
+    const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [ filteredData, setFilteredData] = useState<any[]>([])
     useEffect(() => {
         const fetchData = async() => {
@@ -47,13 +49,21 @@ export const BarcodeNumber = () =>{
         });
     };
 
-    const handleCloseModal = () => {
-        setIsModalVissible(false);
+    const handleCloseModalStatus = () => {
+        setIsStatusModalVisible(false);
         setModalData(null);
     }
     const handleOpenModalStatus = (record_id: number) => {
         setModalData({record_id});
-        setIsModalVissible(true);
+        setIsStatusModalVisible(true);
+    }
+    const handleCloseModalContract = () => {
+        setIsContractModalVisible(false);
+        setModalData(null);
+    }
+    const handleOpenModalContract = (record_id: number) => {
+        setModalData({record_id});
+        setIsContractModalVisible(true);
     }
     return(
         <div>
@@ -189,7 +199,7 @@ export const BarcodeNumber = () =>{
                                                                 <div className="flex gap-5">
                                                                     <Button type="primary"
                                                                         onClick={() => {
-                                                                            handleOpenModalStatus(profile.record_id)
+                                                                            handleOpenModalContract(profile.record_id)
                                                                         }}
                                                                     >
                                                                         <p className="text-white">Thêm mới</p>
@@ -211,12 +221,21 @@ export const BarcodeNumber = () =>{
                     }}
                 />
                 <Modal
-                    visible={isModalVissibe}
-                    onCancel={handleCloseModal}
+                    visible={isContractModalVisible}
+                    onCancel={handleCloseModalContract}
                     footer={null}
                 >
                     {modalData?.record_id && (
                         <ModalAddContractBarcode record_id={modalData.record_id}/>
+                    )}
+                </Modal>
+                <Modal
+                    visible={isStatusModalVisible}
+                    onCancel={handleCloseModalStatus}
+                    footer={null}
+                >
+                    {modalData?.record_id && (
+                        <ModalAddStatusRecordBarcode record_id={modalData.record_id}/>
                     )}
                 </Modal>
             </div>

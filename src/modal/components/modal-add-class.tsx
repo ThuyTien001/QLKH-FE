@@ -15,22 +15,22 @@ export const ModalAddClass = ({ isVisible, onClose, addClassToList }: ModalAddCl
         try {
             setLoading(true);
             // Chuyển timelimit sang số và kiểm tra tính hợp lệ
-            const timelimit = parseFloat(values.timelimit as unknown as string);
+            // const timelimit = parseFloat(values.timelimit as unknown as string);
 
-            if (isNaN(timelimit) || timelimit <= 0) {
-                message.error("Thời hạn phải là một số hợp lệ lớn hơn 0.");
-                return;
-            }
+            // if (isNaN(timelimit)) {
+            //     message.error("Thời hạn phải là một số hợp lệ lớn hơn 0.");
+            //     return;
+            // }
 
             // Trước khi gửi request, kiểm tra dữ liệu
             console.log("Dữ liệu gửi lên:", {
                 class_name: values.class_name,
-                timelimit,
+                timelimit: values.timelimit,
             });
 
             const response = await apiClass.addClass({
                 class_name: values.class_name,
-                timelimit,
+                timelimit: values.timelimit,
             });
             console.log("API Response:", response);
             
@@ -38,7 +38,7 @@ export const ModalAddClass = ({ isVisible, onClose, addClassToList }: ModalAddCl
                 message.success("Thêm lớp học thành công!");
                 form.resetFields();
                 // window.location.reload()
-                addClassToList({ class_name: values.class_name, timelimit }); // Cập nhật danh sách ngay lập tức
+                addClassToList({ class_name: values.class_name, timelimit:values.timelimit }); // Cập nhật danh sách ngay lập tức
                 onClose(); // Đóng modal
             }else{
                 message.error(response.message || "Thêm lớp học thất bại");
@@ -75,7 +75,7 @@ export const ModalAddClass = ({ isVisible, onClose, addClassToList }: ModalAddCl
                     label="Thời hạn"
                     name="timelimit"
                 >
-                    <Input type="float" min={1} />
+                    <Input/>
                 </Form.Item>
                 <Form.Item 
                 >

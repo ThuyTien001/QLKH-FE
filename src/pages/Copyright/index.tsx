@@ -8,7 +8,7 @@ import { apiCopyright } from "@/api"
 import { RecordCopyright } from "./record"
 import { IoIosAdd } from "react-icons/io"
 import { StatusRecordCopyright } from "./status-record"
-import { ModalAddContract } from "@/modal/components"
+import { ModalAddContract, ModalAddStatusRecordStyle } from "@/modal/components"
 import { ContractCopyright } from "./contract"
 import dayjs from "dayjs"
 
@@ -17,7 +17,9 @@ export const Copyright = () => {
     const [copyright, setCopyright] = useState<any[]>([]);
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
-    const [isModalVissible, setIsModalVissible] = useState(false);
+    // const [isModalVissible, setIsModalVissible] = useState(false);
+    const [isContractModalVisible, setIsContractModalVisible] = useState(false);
+    const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
     useEffect(() => {
         const fetchData = async() => {
@@ -39,14 +41,23 @@ export const Copyright = () => {
     const handleFilter = (filteredData: any) => {
         setFilteredData(filteredData);
     }
-    const handleCloseModal =() => {
-        setIsModalVissible(false);
+    const handleCloseModalStatus =() => {
+        setIsStatusModalVisible(false);
         setModalData(null);
     }
 
     const handleOpenModalStatus = (record_id: number) => {
         setModalData({record_id});
-        setIsModalVissible(true);
+        setIsStatusModalVisible(true);
+    }
+    const handleCloseModalContract =() => {
+        setIsContractModalVisible(false);
+        setModalData(null);
+    }
+
+    const handleOpenModalContract = (record_id: number) => {
+        setModalData({record_id});
+        setIsContractModalVisible(true);
     }
     // console.log("data: ", copyright);
     const isNearExpiration = (record: any) => {
@@ -191,7 +202,7 @@ export const Copyright = () => {
                                                                     <Button 
                                                                         type="primary"
                                                                         onClick={() => {
-                                                                            handleOpenModalStatus(profile.record_id)
+                                                                            handleOpenModalContract(profile.record_id)
                                                                         }}
                                                                     >
                                                                         <p className="text-white">Thêm mới</p>
@@ -212,12 +223,21 @@ export const Copyright = () => {
                     }}
                 />
                 <Modal 
-                    visible={isModalVissible}
-                    onCancel={handleCloseModal}
+                    visible={isContractModalVisible}
+                    onCancel={handleCloseModalContract}
                     footer = {null}
                 >
                     {modalData?.record_id && (
                         <ModalAddContract record_id={modalData.record_id} />
+                    )}
+                </Modal>
+                <Modal 
+                    visible={isStatusModalVisible}
+                    onCancel={handleCloseModalStatus}
+                    footer = {null}
+                >
+                    {modalData?.record_id && (
+                        <ModalAddStatusRecordStyle record_id={modalData.record_id} />
                     )}
                 </Modal>
             </div>

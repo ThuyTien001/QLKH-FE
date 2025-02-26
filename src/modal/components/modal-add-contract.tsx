@@ -11,13 +11,13 @@ export const ModalAddContract = ({
 }) => {
     const [form] = Form.useForm();
     useEffect(() => {
-        if(record_id){
-            form.setFieldsValue({record_id: record_id})
-        }
-        // const now = new Date();
-        // const month = String(now.getMonth() + 1).padStart(2, "0");
-        // const year = String(now.getFullYear()).slice(-2);
-        form.setFieldsValue({contract_code: `HD`})
+        // if(record_id){
+        //     form.setFieldsValue({record_id: record_id})
+        // }
+        // // const now = new Date();
+        // // const month = String(now.getMonth() + 1).padStart(2, "0");
+        // // const year = String(now.getFullYear()).slice(-2);
+        // form.setFieldsValue({contract_code: `HD`})
     })
 
     const appendFilesToFormData = (formData: FormData, fileName:string, files?: UploadFile[])=>{
@@ -65,7 +65,7 @@ export const ModalAddContract = ({
                 label="Mã hợp đồng"
                 name="contract_code"
             >
-                <Input disabled/>
+                <Input/>
             </Form.Item>
             <Form.Item
                 label="Tên hợp đồng"

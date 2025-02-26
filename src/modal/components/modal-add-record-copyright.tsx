@@ -12,14 +12,14 @@ export const ModalAddRecordCopyright = ({
     const [form] = Form.useForm();
     const [commission, setCommission] = useState<any[]>([]);
     useEffect(() => {
-        if(customer_id){
-            form.setFieldsValue({customer_id: customer_id});
-        }
+        // if(customer_id){
+        //     form.setFieldsValue({customer_id: customer_id});
+        // }
 
         // const now = new Date();
         // const month = String(now.getMonth() + 1).padStart(2, "0");
         // const year = String(now.getFullYear()).slice(-2);
-        form.setFieldsValue({record_code: `QTG`});
+        // form.setFieldsValue({record_code: `QTG`});
 
         const fetchCommission = async () => {
             try{
@@ -83,7 +83,7 @@ export const ModalAddRecordCopyright = ({
             layout="vertical" 
             form={form}>
           <Form.Item label="Mã hồ sơ" name="record_code">
-            <Input disabled />
+            <Input />
           </Form.Item>
     
           <Form.Item

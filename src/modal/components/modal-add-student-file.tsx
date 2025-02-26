@@ -104,6 +104,7 @@ export const ModalAddStudentFile: React.FC<ModalAddStudentFileProps> = ({courseI
 
     // Gửi dữ liệu lên API
     submitStudents(processedData);
+    window.location.reload()
     }
 
     // const submitStudents = async (students: any[]) => {
