@@ -61,24 +61,38 @@ export const ModalAddStudentFile: React.FC<ModalAddStudentFileProps> = ({courseI
     //     const data = await response.json();
     //     return data;
     // }
-    const fetchParticipants = async () => {
-        try {
-            const response = await fetch("http://localhost:5000/api/participant");
-            const data = await response.json();
-            // console.log("Dữ liệu participant từ API:", data); // Debug dữ liệu trả về
-            return data;
-        } catch (error) {
-            console.error("Lỗi fetch participants:", error);
-            return []; // Trả về mảng rỗng nếu có lỗi
+    // const fetchParticipants = async () => {
+    //     try {
+    //         const response = await fetch("http://localhost:5000/api/participant");
+    //         const data = await response.json();
+    //         // console.log("Dữ liệu participant từ API:", data); // Debug dữ liệu trả về
+    //         return data;
+    //     } catch (error) {
+    //         console.error("Lỗi fetch participants:", error);
+    //         return []; // Trả về mảng rỗng nếu có lỗi
+    //     }
+    // };
+    // const convertExcelDate = (excelDate: number) => {
+    //     const date = new Date((excelDate - 25569) * 86400000);
+    //     return date.toISOString().split("T")[0]; // Trả về YYYY-MM-DD
+    // };
+    const convertExcelDate = (excelDate?: number) => {
+        if (!excelDate || isNaN(excelDate)) {
+            return ""; // Trả về chuỗi rỗng nếu không có giá trị hoặc không hợp lệ
         }
-    };
-    const convertExcelDate = (excelDate: number) => {
+        
         const date = new Date((excelDate - 25569) * 86400000);
+        
+        if (isNaN(date.getTime())) {
+            return ""; // Trả về rỗng nếu ngày tháng không hợp lệ
+        }
+    
         return date.toISOString().split("T")[0]; // Trả về YYYY-MM-DD
     };
+    
     const processStudent = async (student: any[])=> {
-        const participants = await fetchParticipants();
-        const participantMap = new Map(participants.data.map((p: any) => [p.participant_name, p.participant_id]))
+        // const participants = await fetchParticipants();
+        // const participantMap = new Map(participants.data.map((p: any) => [p.participant_name, p.participant_id]))
 
         if (!courseId) {
             message.error("Course ID không hợp lệ!");
@@ -97,14 +111,14 @@ export const ModalAddStudentFile: React.FC<ModalAddStudentFileProps> = ({courseI
             phone: student["SĐT"] || "",
             email:student["Email"] || "",
             address: student["Địa chỉ"] || "",
-            participant_id: participantMap.get(student["Đối tượng"]) || null,
+            participant: student["Đối tượng"] || "",
             course_id: courseId
         }))
-        // console.log("Dữ liệu sau khi xử lý:", processedData);
+        console.log("Dữ liệu sau khi xử lý:", processedData);
 
     // Gửi dữ liệu lên API
     submitStudents(processedData);
-    window.location.reload()
+    
     }
 
     // const submitStudents = async (students: any[]) => {
@@ -141,6 +155,8 @@ export const ModalAddStudentFile: React.FC<ModalAddStudentFileProps> = ({courseI
     
             if (response.ok) {
                 console.log("Thêm học viên thành công!");
+                message.success("Thêm học viên mới thành công!")
+                window.location.reload()
             } else {
                 console.error("Lỗi khi thêm học viên:", result);
             }

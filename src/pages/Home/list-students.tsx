@@ -93,7 +93,7 @@ export const ListStudents = ({
                 },
                 {
                     title: "Đối tượng",
-                    dataIndex: "participant_name",
+                    dataIndex: "participant",
                 },
                 {
                     title: "Hành động",

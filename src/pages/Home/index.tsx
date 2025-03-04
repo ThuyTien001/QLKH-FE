@@ -59,12 +59,23 @@ export const Home = () => {
 
       const isNearExpiration = (record: any) => {
         // console.log("record: ", record)
-        if(!record?.end_time){
+        // if(!record?.end_time){
+        //   return false;
+        // }
+        // const threeMonthLater = dayjs().add(3, "months");
+        // const expirationDate = dayjs(record.end_time, "DD-MM-YYYY");
+        // return expirationDate.isBefore(threeMonthLater) || expirationDate.isSame(threeMonthLater);
+
+        if (!record?.end_time || !record?.timelimit) {
           return false;
         }
-        const threeMonthLater = dayjs().add(3, "months");
-        const expirationDate = dayjs(record.end_time, "DD-MM-YYYY");
-        return expirationDate.isBefore(threeMonthLater) || expirationDate.isSame(threeMonthLater);
+      
+        const endDate = dayjs(record.end_time, "DD-MM-YYYY");
+        const expirationDate = endDate.add(record.timelimit, "year"); // Ngày hết hạn thực tế
+        const threeMonthsBeforeExpiration = expirationDate.subtract(3, "months"); // 3 tháng trước khi hết hạn
+        const currentDate = dayjs();
+      
+        return currentDate.isAfter(threeMonthsBeforeExpiration) && currentDate.isBefore(expirationDate);
         
       }
       // Hàm thêm lớp học mới vào danh sách
