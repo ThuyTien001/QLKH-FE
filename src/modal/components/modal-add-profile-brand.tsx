@@ -209,7 +209,7 @@ export const ModalAddProfileBrand =({
             </Form.Item>
             <Form.Item
                 label="Khác"
-                name="file"
+                name="orther"
                 valuePropName="fileList"
                 getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
             >

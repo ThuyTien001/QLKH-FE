@@ -4,9 +4,9 @@ import { HeaderHome } from './header-home';
 import { useEffect, useState } from "react";
 import { apiCourse } from "@/api/api-course";
 import { ListStudents } from "./list-students";
-import { Modal, Table } from "antd";
+import { Dropdown, message, Modal, notification, Table } from "antd";
 import { ModalAddCourse, ModalAddStudent } from "@/modal/components";
-import { BiEditAlt } from "react-icons/bi";
+import { BiDotsVerticalRounded, BiEditAlt } from "react-icons/bi";
 import { useModal } from "@/hooks";
 import dayjs from "dayjs";
 import { ModalAddStudentFile } from "@/modal/components/modal-add-student-file";
@@ -110,12 +110,12 @@ export const Home = () => {
                             dataSource={course}
                             rowKey="course_id" 
                             columns={[
-                              {
-                                title: "ID",
-                                dataIndex: "course_id",
-                                key: "course_id",
-                                sorter: (a: any, b: any) => a.course_id - b.course_id,
-                              },
+                              // {
+                              //   title: "ID",
+                              //   dataIndex: "course_id",
+                              //   key: "course_id",
+                              //   sorter: (a: any, b: any) => a.course_id - b.course_id,
+                              // },
                                 {
                                     title: "Mã khóa học",
                                     dataIndex: "course_code",
@@ -159,6 +159,54 @@ export const Home = () => {
                                                   });
                                               }}
                                           />
+                                          {/* <div className="cursor-pointer">
+                                            <Dropdown
+                                                placement="bottomRight"
+                                                menu={{
+                                                    items: [
+                                                        {
+                                                            key: "1",
+                                                            label: (
+                                                                <p
+                                                                onClick={() => {
+                                                                  
+                                                                      Modal.confirm({
+                                                                          title: record.status === "Khách hàng tiềm năng"
+                                                                              ? "Hủy trạng thái khách hàng tiềm năng"
+                                                                              : "Đánh dấu là khách hàng tiềm năng",
+                                                                          content: record.status
+                                                                              ? `Bạn có chắc chắn muốn hủy trạng thái khách hàng tiềm nằn chó khách hàng có mã số ${record.student_code} này không?`
+                                                                              : `Bạn có chắc chắn muốn đánh dấu khách hàng "${record.class_name}" này là khách hàng tiềm năng không?`,
+                                                                          centered: true,
+                                                                          onOk() {
+                                                                              // handleUpdateStatusSupplier({
+                                                                              //     status: !item.status,
+                                                                              //     id_supplier: item._id,
+                                                                              message.success("Trạng thái đã được cập nhật!")
+                                                                              // });
+                                                                          },
+                                                                          okText: (
+                                                                              <p>
+                                                                                  {record.status
+                                                                                      ? "Hủy trạng thái"
+                                                                                      : "Xác nhận"}
+                                                                              </p>
+                                                                          ),
+                                                                          onCancel() {},
+                                                                          okButtonProps: {
+                                                                              danger: !record.status,
+                                                                          },
+                                                                      });
+                                                              }}
+                                                                >Khách hàng tiềm năng</p>
+                                                            ),
+                                                        },
+                                                    ],
+                                                }}
+                                            >
+                                                <BiDotsVerticalRounded />
+                                            </Dropdown>
+                                        </div> */}
                                       </div>
                                   ),
                               },

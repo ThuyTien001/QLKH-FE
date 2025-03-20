@@ -118,7 +118,7 @@ export const ModalAddProfile = ({
   return (
     <Form onFinish={onFinish} layout="vertical" form={form}>
       <Form.Item label="Mã hồ sơ" name="record_code">
-        <Input disabled />
+        <Input />
       </Form.Item>
 
       <Form.Item

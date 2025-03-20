@@ -42,12 +42,20 @@ export const Brand = () => {
     const handleFilter = (filteredData: any[]) => {
         setFilteredData(filteredData);
     }
-    const handleCloseModal = () => {
+    const handleCloseModalStatus = () => {
         setIsStatusModalVisible(false);
         setModalData(null);
     }
     const handleOpenModalStatus = (record_id: number) => {
         setModalData({record_id});
+        setIsStatusModalVisible(true);
+    }
+    const handleCloseModalContract = () =>{
+        setIsContractModalVisible(false);
+        setModalData(null);
+    }
+    const handleOpenModalContract = (record_id: number) => {
+        setModalData({record_id})
         setIsContractModalVisible(true);
     }
     // console.log("Data brand", brand);
@@ -202,7 +210,7 @@ export const Brand = () => {
                                                                 <div className="flex gap-5">
                                                                     <Button type="primary"
                                                                         onClick={() => {
-                                                                            handleOpenModalStatus(profile.record_id)
+                                                                            handleOpenModalContract(profile.record_id)
                                                                         }}
                                                                     >
                                                                         <p className="text-white">Thêm mới</p>
@@ -226,7 +234,7 @@ export const Brand = () => {
                 />
                 <Modal 
                     visible={isContractModalVisible}
-                    onCancel={handleCloseModal}
+                    onCancel={handleCloseModalContract}
                     footer={null}
                 >
 
@@ -236,7 +244,7 @@ export const Brand = () => {
                 </Modal>
                 <Modal 
                     visible={isStatusModalVisible}
-                    onCancel={handleCloseModal}
+                    onCancel={handleCloseModalStatus}
                     footer={null}
                 >
 

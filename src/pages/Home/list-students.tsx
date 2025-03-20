@@ -77,6 +77,11 @@ export const ListStudents = ({
                     key: "department",
                 },
                 {
+                    title: "Địa chỉ",
+                    dataIndex: "address", 
+                    key: "address",
+                },
+                {
                     title:"SĐT",
                     dataIndex: "phone",
                     key: "phone"
@@ -86,11 +91,7 @@ export const ListStudents = ({
                     dataIndex:"email",
                     key: "email"
                 },
-                {
-                    title: "Địa chỉ",
-                    dataIndex: "address", 
-                    key: "address",
-                },
+                
                 {
                     title: "Đối tượng",
                     dataIndex: "participant",
