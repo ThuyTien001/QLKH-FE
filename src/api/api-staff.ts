@@ -19,12 +19,21 @@ export const apiStaff = {
     //     }
     // },
     login: async (data: { staff_username: string; staff_password: string }) => {
-        const response = await axiosClient.post('/login',{
-          method: "POST",
-          credentials: "include", // Quan trọng để gửi cookie/session
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
+        // const response = await axiosClient.post('/login',{
+        //   method: "POST",
+        //   credentials: "include", // Quan trọng để gửi cookie/session
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify(data),
+        // });
+        const response = await axiosClient.post(
+            "/login",
+            data, // ✅ Không cần JSON.stringify
+            {
+              withCredentials: true, // ✅ Để gửi cookie/session
+              headers: { "Content-Type": "application/json" }, // ✅ Đặt ở đây
+            }
+          );
+          
     
         if (!response.data) {
           throw new Error("Sai tên đăng nhập hoặc mật khẩu!");

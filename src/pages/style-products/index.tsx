@@ -1,9 +1,9 @@
 import { Header } from "@/components"
 import { HeaderStyleProducts } from './header-style-products';
-import { Button, Modal, Table, Tabs, } from "antd";
+import { Button, Dropdown, message, Modal, Table, Tabs, } from "antd";
 // import { dataStyleProduct } from "@/constant";
 import { ProfileStyleProducts } from "./profile";
-import { BiEditAlt } from "react-icons/bi";
+import { BiDotsVerticalRounded, BiEditAlt } from "react-icons/bi";
 import { useModal } from "@/hooks";
 import { useEffect, useState } from "react";
 import { apiStyleProduct } from "@/api";
@@ -53,13 +53,13 @@ export const StyleProducts = () => {
         setIsStatusModalVisible(true);
     }
     const handleCloseModalContract = () => {
-        setIsStatusModalVisible(false);
+        setIsContractModalVisible(false);
         setModalData(null);
     }
 
     const handleOpenModalContract = (record_id: number) => {
         setModalData({record_id});
-        setIsStatusModalVisible(true);
+        setIsContractModalVisible(true);
     }
     const isNearExpiration = (record: any) => {
         const sixMonthsLater = dayjs().add(6, "months");
@@ -68,6 +68,44 @@ export const StyleProducts = () => {
             return expirationDate.isBefore(sixMonthsLater) || expirationDate.isSame(sixMonthsLater);
         });
     };
+    const handleupdateStatus = async (customer_id: string, currentStatus: string) =>{
+        try{
+            
+            // console.log("status customer: ", customer_status);
+            const newStatus = currentStatus === "Khách hàng tiềm năng" ? "Khách thường" : "Khách hàng tiềm năng";
+            // console.log("Updating customer:", customer_id, "New Status:", newStatus);
+            const requestData = {
+                customer_id,  // ID khách hàng
+                customer_status: newStatus, // Trạng thái mới
+            };
+    
+            console.log("Request data:", requestData);
+            const response = await apiStyleProduct.updateStatusCustomer(requestData)
+            console.log("Dữ liệu cập nhật: ", response);
+            if(response.success){
+                message.success("Trạng thái đã được cập nhật");
+                setStyleproduct((prev) =>
+                    prev.map((customer) =>
+                        customer.customer_id === customer_id
+                            ? { ...customer, customer_status: newStatus }
+                            : customer
+                    )
+                );
+                setFilteredData((prev) =>
+                    prev.map((customer) =>
+                        customer.customer_id === customer_id
+                            ? { ...customer, customer_status: newStatus }
+                            : customer
+                    )
+                );
+            }else{
+                message.error(response.meseage || "Cập nhật thất bại");
+            }
+        }catch(error){
+            console.error("Lỗi khi cập nhật trạng thái");
+            message.error("Lỗi khi cập nhật trạng thái khách hàng!")
+        }
+    }
     return(
         <div>
             <Header/>
@@ -123,6 +161,11 @@ export const StyleProducts = () => {
                             key: "lp_name"
                         },
                         {
+                            title: "Trạng thái",
+                            dataIndex: "customer_status",
+                            key: "customer_status"
+                        },
+                        {
                             title: "Hành động",
                             dataIndex: "action",
                             key: "action",
@@ -139,7 +182,58 @@ export const StyleProducts = () => {
                                             });
                                         }}
                                     />
+                                    <div className="cursor-pointer">
+                                            <Dropdown
+                                                placement="bottomRight"
+                                                menu={{
+                                                    items: [
+                                                        {
+                                                            key: "1",
+                                                            label: (
+                                                                <p
+                                                                onClick={() => {
+                                                                console.log("Mã khách hàng: ", record.customer_id)
+                                                                    Modal.confirm({
+                                                                        title: record.status === "Khách hàng tiềm năng"
+                                                                            ? "Khách thường"
+                                                                            : "Khách hàng tiềm năng",
+                                                                        content: record.status
+                                                                            ? `Bạn có chắc chắn muốn hủy trạng thái khách hàng tiềm nằn chó khách hàng ${record.customer_name} này không?`
+                                                                            : `Bạn có chắc chắn muốn đánh dấu khách hàng "${record.customer_name}" này là khách hàng tiềm năng không?`,
+                                                                        centered: true,
+                                                                        onOk() {
+                                                                              // handleUpdateStatusSupplier({
+                                                                              //     status: !item.status,
+                                                                              //     id_supplier: item._id,
+                                                                              handleupdateStatus(record.customer_id, record.customer_status)
+                                                                              
+                                                                            // message.success("Trạng thái đã được cập nhật!")
+                                                                              // });
+                                                                        },
+                                                                        okText: (
+                                                                            <p>
+                                                                                {record.status
+                                                                                    ? "Hủy trạng thái"
+                                                                                    : "Xác nhận"}
+                                                                            </p>
+                                                                        ),
+                                                                        onCancel() {},
+                                                                        okButtonProps: {
+                                                                            danger: !record.status,
+                                                                        },
+                                                                    });
+                                                            }}
+                                                                >Khách hàng tiềm năng</p>
+                                                            ),
+                                                        },
+                                                    ],
+                                                }}
+                                            >
+                                                <BiDotsVerticalRounded />
+                                            </Dropdown>
+                                        </div>
                                 </div>
+                                
                             ),
                         },
                     ]}
@@ -207,7 +301,7 @@ export const StyleProducts = () => {
                                                             <div className="flex gap-5">
                                                                 <Button type="primary"
                                                                     onClick={() => {
-                                                                        handleOpenModalStatus(profile.record_id)
+                                                                        handleOpenModalContract(profile.record_id)
                                                                     }}
                                                                     className=" text-white px-4 py-2 mt-2 rounded"
                                                                 >

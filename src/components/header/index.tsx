@@ -31,7 +31,7 @@ export const Header = () => {
                         />
                     </div> */}
                 </div>
-                <div className="basis-3/5 flex justify-between items-center">
+                <div className="basis-4/5 flex justify-between items-center">
                     <div className='flex gap-7'>
                         <Link
                             to="/trainning"
@@ -159,6 +159,15 @@ export const Header = () => {
                             )}
                         >
                             Đầu mối
+                        </Link>
+                        <Link
+                            to="/customer"
+                            className={clsx(
+                                defaultClassName,
+                                "/customer" === location.pathname ? "text-[#A1D40A]" : "text-[#171725]"
+                            )}
+                        >
+                            Khách hàng tiềm năng
                         </Link>
                     </div>
                     <div className="flex items-center gap-3">

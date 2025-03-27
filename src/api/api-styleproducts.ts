@@ -1,5 +1,6 @@
+import { message } from "antd";
 import { axiosClient } from "./axios-client";
-import { dataCustomer, } from "@/type";
+import { dataCustomer, statusCustomer, } from "@/type";
 
 export const apiStyleProduct = {
     getStyleProduct: () => {
@@ -37,5 +38,16 @@ export const apiStyleProduct = {
     },
     getPartner: () => {
         return axiosClient.get('/partner');
+    },
+    getCustomerPotential: () => {
+        return axiosClient.get('/customer_potential');
+    },
+    updateStatusCustomer : async (statusCustomer: statusCustomer) => {
+        try{
+            const respones = await axiosClient.put('/customer/update/status', statusCustomer);
+            return respones.data;
+        }catch(error){
+            return { success: false, message: "Lỗi khi cập nhật trạng thái khách hàng"}
+        }
     }
 }

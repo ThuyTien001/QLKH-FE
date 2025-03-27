@@ -13,3 +13,7 @@ export interface dataCustomer {
     position: string,
     
 }
+export interface statusCustomer{
+    customer_id?: string;
+    customer_status: string;
+}

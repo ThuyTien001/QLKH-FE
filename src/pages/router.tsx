@@ -12,6 +12,7 @@ import { BarcodeNumber } from "./BarcodeNumber";
 import { Copyright } from "./Copyright";
 import { LeadProvider } from "./lead-provider";
 import { Partner } from "./partner";
+import { Cusstomer } from "./customer";
 
 
 export const router = createBrowserRouter([
@@ -96,6 +97,14 @@ export const router = createBrowserRouter([
         element: (
             <ProtectedRoute>
                 <Partner/>
+            </ProtectedRoute>
+        )
+    },
+    {
+        path: "/customer",
+        element: (
+            <ProtectedRoute>
+                <Cusstomer/>
             </ProtectedRoute>
         )
     },

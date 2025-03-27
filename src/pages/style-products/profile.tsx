@@ -16,7 +16,7 @@ export const ProfileStyleProducts = ({
     customer_id: number;
 }) => {
     const {ModalTypeEnum, toggleModal} = useModal()
-    console.log("customer: ", customer_id);
+    // console.log("customer: ", customer_id);
     // const [ selectRecord, setSelectRecordId] = useState<number | null >(null);
     // const [ isModalVisible, setIsModalVisible] = useState(false);
     // const handleOpenModal = (recordId: number)=> {
