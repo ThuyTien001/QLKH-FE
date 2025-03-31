@@ -20,7 +20,21 @@ export const ContractStyleProduct = ({data} : any) => {
                     key: "contract_name"
                 },
                 {
-                    title: "Hợp đồng nghiệm thu",
+                    title: "Hợp đồng",
+                    dataIndex: "contract",
+                    key: "contract",
+                    render: (acceptance: string) => {
+                        if(!acceptance) return "";
+                        const fileName = acceptance.split('/').pop();
+                        return(
+                            <a href={acceptance} rel="noopener noreferrer">
+                                {fileName}
+                            </a>
+                        )
+                    }
+                },
+                {
+                    title: "Nghiệm thu hơp đồng",
                     dataIndex: "acceptance",
                     key: "acceptance",
                     render: (acceptance: string) => {
@@ -34,7 +48,7 @@ export const ContractStyleProduct = ({data} : any) => {
                     }
                 },
                 {
-                    title: "Hợp đồng thanh lý",
+                    title: "Thanh lý hợp đồng",
                     dataIndex: "settlement",
                     key: "settlement",
                     render: (settlement: string) => {

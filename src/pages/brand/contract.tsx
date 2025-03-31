@@ -20,7 +20,21 @@ export const ContractBrand = ({data}: any) => {
                     key: "contract_name"
                 },
                 {
-                    title: "Hợp đồng nghiệm thu",
+                    title: "Hợp đồng",
+                    dataIndex: "settlement",
+                    key: "settlement",
+                    render: (settlement: string) => {
+                        if(!settlement) return "";
+                        const fileName = settlement.split('/').pop();
+                        return(
+                            <a href={settlement} rel="noopener noreferrer">
+                                {fileName}
+                            </a>
+                        )
+                    }
+                },
+                {
+                    title: "Nghiệm thu hợp đồng",
                     dataIndex: "acceptance",
                     key: "acceptance",
                     render: (acceptance: string) => {
@@ -34,7 +48,7 @@ export const ContractBrand = ({data}: any) => {
                     }
                 },
                 {
-                    title: "Hợp đồng thanh lý",
+                    title: "Thanh lý hợp đồng",
                     dataIndex: "settlement",
                     key: "settlement",
                     render: (settlement: string) => {

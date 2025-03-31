@@ -37,6 +37,7 @@ export const ModalAddContractBrand = ({
             appendFilesToFormData(formData, "acceptance", values.acceptance);
             appendFilesToFormData(formData, "settlement", values.settlement);
             appendFilesToFormData(formData, "bill", values.bill);
+            appendFilesToFormData(formData, "contract", values.contract);
 
             const response = await apiContract.addContract(formData);
             if(!response){
@@ -74,7 +75,26 @@ export const ModalAddContractBrand = ({
                 <Input/>
             </Form.Item>
             <Form.Item
-                label="Hợp đồng nghiệm thu"
+                label="Hợp đồng"
+                name="contract"
+                valuePropName="fileList"
+                getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
+            >
+                <Upload beforeUpload={() => false} listType="text" maxCount={1}>
+                    <Input
+                        placeholder="Nhấn để chọn tệp"
+                        readOnly
+                        addonAfter={<UploadOutlined />}
+                        onClick={(e) => {
+                        e.preventDefault();
+                        const input = e.currentTarget.parentElement?.querySelector("input[type=file]");
+                        if (input instanceof HTMLInputElement) input.click();
+                        }}
+                    />
+                </Upload>
+            </Form.Item>
+            <Form.Item
+                label="Nghiệm thu hợp đồng"
                 name="acceptance"
                 valuePropName="fileList"
                 getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
@@ -93,7 +113,7 @@ export const ModalAddContractBrand = ({
                 </Upload>
             </Form.Item>
             <Form.Item
-                label="Hợp đồng thanh lý"
+                label="Thanh lý hợp đồng"
                 name="settlement"
                 valuePropName="fileList"
                 getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}

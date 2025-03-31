@@ -8,6 +8,7 @@ export interface FormContract{
     bill?: UploadFile[];
     record_id?: number;
     contract_id?: number;
+    contract?: UploadFile[];
 }
 
 export interface FormUpdateContract{
