@@ -8,7 +8,7 @@ import { apiBarcode } from "@/api/api-barcode"
 import { RecordBarcode } from "./record"
 import { IoIosAdd } from "react-icons/io"
 import { StatusRecordBarcode } from "./status-record"
-import { ModalAddContractBarcode, ModalAddStatusRecordBarcode } from "@/modal/components"
+import { ModalAddContractBarcode, ModalAddProfileStyle, ModalAddRecordBarcode, ModalAddStatusRecordBarcode } from "@/modal/components"
 import { ContractBarcode } from "./contract"
 import dayjs from "dayjs"
 import { apiStyleProduct } from "@/api"
@@ -19,9 +19,12 @@ export const BarcodeNumber = () =>{
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
     // const [isModalVissibe, setIsModalVissible] = useState(false);
+    const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
     const [isContractModalVisible, setIsContractModalVisible] = useState(false);
     const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [ filteredData, setFilteredData] = useState<any[]>([])
+    const [selectedProfileId, setSelectedProfileId] = useState<number | null>(null);
+    const [isRecordModalVisible, setIsRecordModalVisible] = useState(false);
     useEffect(() => {
         const fetchData = async() => {
             try{
@@ -104,11 +107,40 @@ export const BarcodeNumber = () =>{
                         message.error("Lỗi khi cập nhật trạng thái khách hàng!")
                     }
                 }
+                //Hàm thêm khách hàng vào danh sách 
+    const addProfileToList = (newProfile: any)=>{
+        setBarcode((prevProfile) => [...prevProfile, newProfile])
+        setFilteredData((prevProfile) => [...prevProfile, newProfile])
+    };
+    const fetchProfile = async()=>{
+        try{
+            const response = await apiStyleProduct.getStyleProduct();
+            if(response && response.data){
+                setBarcode(response.data);
+                setFilteredData(response.data);
+            }else{
+                console.error("No data found in response");
+            }
+        }catch(error){
+            console.error("Error fetching Customer: ", error);
+        }
+    };
+    const handleCloseProfileModal = () => {
+        setIsProfileModalVisible(false)
+    }
+    const handleOpenModalAddRecord = (customer_id: number) => {
+        setIsRecordModalVisible(true);
+        setSelectedProfileId(customer_id);
+    }
+    const handleCloseRecordModal = () => {
+        setIsRecordModalVisible(false);
+        setSelectedProfileId(null);
+    }
     return(
         <div>
             <Header />
             <div className="mt-4 mr-4">
-                <HeaderBarcode data={barcode} onFilter={handleFilter} />
+                <HeaderBarcode data={barcode} onFilter={handleFilter} openAddProfileModal={() => setIsProfileModalVisible(true)}/>
                 <Table 
                     // dataSource={barcode.map((item, index) => ({...item, key: index}))}
                     dataSource={(filteredData.length > 0 ? filteredData : []).map((item, index) => ({...item, key: index}))}
@@ -244,7 +276,7 @@ export const BarcodeNumber = () =>{
                                         {
                                             key: "1",
                                             label: "Hồ sơ",
-                                            children: <RecordBarcode data={item.list_profile.map((profile: any) => ({
+                                            children: <RecordBarcode onAddRecord={() => handleOpenModalAddRecord(item.customer_id)}   data={item.list_profile.map((profile: any) => ({
                                                 ...profile,
                                                 status_profile: profile.status_profile || [],
                                                 contracts: profile.contracts || [],
@@ -315,12 +347,28 @@ export const BarcodeNumber = () =>{
                     }}
                 />
                 <Modal
+                    title="Thêm khách hàng"
+                    open={isProfileModalVisible}
+                    onCancel={handleCloseProfileModal}
+                    footer={null}
+                >
+                    <ModalAddProfileStyle fetchProfile={fetchProfile} onClose={handleCloseProfileModal} addProfileToList={addProfileToList}/>
+                </Modal>
+                <Modal
+                    title ="Thêm hồ sơ"
+                    open={isRecordModalVisible}
+                    onCancel={handleCloseRecordModal}
+                    footer={null}
+                >
+                    {selectedProfileId && <ModalAddRecordBarcode fetchRecord={fetchProfile} onAddRecord={handleOpenModalAddRecord} customer_id={selectedProfileId} onClose={handleCloseProfileModal} />}
+                </Modal>
+                <Modal
                     visible={isContractModalVisible}
                     onCancel={handleCloseModalContract}
                     footer={null}
                 >
                     {modalData?.record_id && (
-                        <ModalAddContractBarcode record_id={modalData.record_id}/>
+                        <ModalAddContractBarcode onAddContract={handleOpenModalContract} fetchContract={fetchProfile} onClose={handleCloseModalContract} record_id={modalData.record_id}/>
                     )}
                 </Modal>
                 <Modal
@@ -329,7 +377,7 @@ export const BarcodeNumber = () =>{
                     footer={null}
                 >
                     {modalData?.record_id && (
-                        <ModalAddStatusRecordBarcode record_id={modalData.record_id}/>
+                        <ModalAddStatusRecordBarcode onAddtatus={handleOpenModalStatus} fetchStatus={fetchProfile} onClose={handleCloseModalStatus} record_id={modalData.record_id}/>
                     )}
                 </Modal>
             </div>

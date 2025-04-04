@@ -4,10 +4,14 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, message, Upload, UploadFile } from "antd"
 import dayjs from "dayjs";
 
-export const ModalAddStatusRecordPatent = ({
-    record_id,
-}: {
-    record_id: number
+interface ModalAddStatus{
+    record_id: number | null;
+    onAddStatus:(dataStatus: any)=>void;
+    fetchStatus: ()=> void;
+    onClose: () => void;
+}
+export const ModalAddStatusRecordPatent: React.FC<ModalAddStatus> = ({
+    record_id, onAddStatus, fetchStatus, onClose
 }) =>{
     const [form] = Form.useForm();
 
@@ -57,7 +61,10 @@ export const ModalAddStatusRecordPatent = ({
             if(response){
                 message.success("Thêm trạng thái thành công");
                 form.resetFields();
-                    window.location.reload()
+                    // window.location.reload()
+                onAddStatus(response.data);
+                fetchStatus();
+                onClose();
             }else{
                 message.error("Thêm trạng thái thất bại");
             }

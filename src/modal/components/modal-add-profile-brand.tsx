@@ -4,11 +4,15 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Select, Upload, UploadFile } from "antd";
 import { useEffect, useState } from "react";
 
-export const ModalAddProfileBrand =({
-            customer_id,
-        }: {
-            customer_id: number;
-        }) =>{
+interface ModalAddRecordBrand{
+    customer_id: number | null;
+    onAddRecord: (dataRecord: any)=> void;
+    fetchRecord: ()=>void;
+    onclose: ()=>void;
+}
+export const ModalAddProfileBrand: React.FC<ModalAddRecordBrand> = ({
+    customer_id, onAddRecord, fetchRecord, onclose
+})=>{
 
             const [form] = Form.useForm();
             const [commission, setCommission] = useState<any[]>([]);
@@ -81,7 +85,10 @@ export const ModalAddProfileBrand =({
                     if (response) {
                       message.success( "Thêm hồ sơ thành công");
                       form.resetFields();
-                      window.location.reload();
+                    //   window.location.reload();
+                    onAddRecord(response.data);
+                    fetchRecord();
+                    onclose();
                     } else {
                       message.error( "Thêm hồ sơ thất bại");
                     }

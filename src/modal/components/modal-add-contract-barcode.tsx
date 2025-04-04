@@ -4,10 +4,14 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Upload, UploadFile } from "antd";
 import { useEffect } from "react";
 
-export const ModalAddContractBarcode = ({
-    record_id,
-}:{
-    record_id: number
+interface ModalAddContract{
+    record_id: number | null;
+    onAddContract: (dataContract: any)=> void;
+    fetchContract: () => void;
+    onClose: () => void;
+}
+export const ModalAddContractBarcode: React.FC<ModalAddContract> = ({
+    record_id, onAddContract, fetchContract, onClose
 }) => {
     const [form] = Form.useForm();
     useEffect(() => {
@@ -17,7 +21,7 @@ export const ModalAddContractBarcode = ({
         // const now = new Date();
         // const month = String(now.getMonth() + 1).padStart(2, "0");
         // const year = String(now.getFullYear()).slice(-2);
-        form.setFieldsValue({contract_code: `HD`})
+        // form.setFieldsValue({contract_code: `HD`})
     })
 
     const appendFilesToFormData = (formData: FormData, fileName:string, files?: UploadFile[])=>{
@@ -47,7 +51,10 @@ export const ModalAddContractBarcode = ({
             if(response){
                 message.success("Thêm hợp đồng thành công");
                 form.resetFields();
-                window.location.reload();
+                // window.location.reload();
+                onAddContract(response.data);
+                fetchContract();
+                onClose();
             }else{
                 message.error("Thêm hợp đồng thất bại");
             }

@@ -5,7 +5,10 @@ import { Button, Form, Input, message, Select, Upload, UploadFile } from "antd";
 import { useEffect, useState } from "react";
 
 interface ModalAddProfile {
-  customerId: number | null;
+  customer_id: number | null;
+  onAddRecord: (dataRecord: any)=> void;
+  fetchRecord: ()=> void;
+  onClose: () => void;
 }
 
 // interface FormValues {
@@ -21,12 +24,13 @@ interface ModalAddProfile {
 // interface ModalAddRecordStyleProps {
 //   data?: { customer_id?: number }; 
 // }
-export const ModalAddProfile = ({
-  customer_id,
-}: {
-  // onAddCustomer: () => void;
-  customer_id: number;
-}) => {
+// export const ModalAddProfile = ({
+//   customer_id,
+// }: {
+//   // onAddCustomer: () => void;
+//   customer_id: number;
+// }) 
+export const ModalAddProfile: React.FC<ModalAddProfile> = ({customer_id, onAddRecord, fetchRecord, onClose})=> {
   const [form] = Form.useForm();
   const [commission, setCommission] = useState<any[]>([]);
   // const {customer_id} = data
@@ -104,7 +108,10 @@ export const ModalAddProfile = ({
       if (response) {
         message.success( "Thêm hồ sơ thành công");
         form.resetFields();
-        window.location.reload();
+        // window.location.reload();
+        onAddRecord(response.data);
+        fetchRecord();
+        onClose();
       } else {
         message.error( "Thêm hồ sơ thất bại");
       }
@@ -127,7 +134,7 @@ export const ModalAddProfile = ({
         valuePropName="fileList"
         getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
         // getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList.map((file: { originFileObj: any; }) => file.originFileObj))}
-        rules={[{ required: true, message: "Vui lòng cung cấp đơn" }]}
+        // rules={[{ required: true, message: "Vui lòng cung cấp đơn" }]}
       >
         <Upload beforeUpload={() => false} listType="text" maxCount={1}>
           <Input
@@ -149,7 +156,7 @@ export const ModalAddProfile = ({
         valuePropName="fileList"
         getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
         // getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList.map((file: { originFileObj: any; }) => file.originFileObj))}
-        rules={[{ required: true, message: "Vui lòng cung cấp hình ảnh/Logo" }]}
+        // rules={[{ required: true, message: "Vui lòng cung cấp hình ảnh/Logo" }]}
       >
         <Upload beforeUpload={() => false} maxCount={1}>
           <Input
@@ -171,7 +178,7 @@ export const ModalAddProfile = ({
         valuePropName="fileList"
         getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
         // getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList.map((file: { originFileObj: any; }) => file.originFileObj))}
-        rules={[{ required: true, message: "Vui lòng cung cấp giấy ủy quyền" }]}
+        // rules={[{ required: true, message: "Vui lòng cung cấp giấy ủy quyền" }]}
       >
         <Upload beforeUpload={() => false} maxCount={1}>
           <Input
@@ -193,7 +200,7 @@ export const ModalAddProfile = ({
         valuePropName="fileList"
         getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
         // getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList.map((file: { originFileObj: any; }) => file.originFileObj))}
-        rules={[{ required: true, message: "Vui lòng cung cấp giấy phép kinh doanh" }]}
+        // rules={[{ required: true, message: "Vui lòng cung cấp giấy phép kinh doanh" }]}
       >
         <Upload beforeUpload={() => false} maxCount={1}>
           <Input

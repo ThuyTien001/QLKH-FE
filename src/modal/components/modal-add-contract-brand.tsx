@@ -4,11 +4,13 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Upload, UploadFile } from "antd";
 import { useEffect } from "react";
 
-export const ModalAddContractBrand = ({
-    record_id,
-}: {
-    record_id: number;
-}) => {
+interface ModalAddcontract {
+    record_id: number | null;
+    onAddContract: (dataContract: any) => void;
+    fetchContrat: () => void;
+    onClose: () => void;
+}
+export const ModalAddContractBrand: React.FC<ModalAddcontract> = ({record_id, onAddContract, fetchContrat, onClose})=> {
     const [form] = Form.useForm();
     useEffect(() => {
         // if(record_id){
@@ -47,7 +49,10 @@ export const ModalAddContractBrand = ({
             if(response){
                 message.success("Thêm hợp đồng thành công");
                 form.resetFields();
-                window.location.reload();
+                // window.location.reload();
+                onAddContract(response.data);
+                fetchContrat();
+                onClose();
             }else{
                 message.error("Thêm hợp đồng thất bại");
             }

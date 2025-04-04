@@ -5,9 +5,11 @@ import { IoIosAdd } from 'react-icons/io';
 export const RecordCopyright = ({
     data = [],
     customer_id,
+    onAddRecord,
 }: {
     data: any[];
     customer_id: number;
+    onAddRecord: (newRecord: any)=> void;
 }) => {
     const {ModalTypeEnum, toggleModal} = useModal();
     return(
@@ -21,11 +23,12 @@ export const RecordCopyright = ({
                             <div
                                 className="flex items-center gap-2"
                                 onClick={() => {
-                                    toggleModal({
-                                        title: "Thêm hồ sơ",
-                                        type: ModalTypeEnum.MODAL_ADD_RECORD_COPYRIGHT,
-                                        data: {customer_id}
-                                    });
+                                    onAddRecord(customer_id)
+                                    // toggleModal({
+                                    //     title: "Thêm hồ sơ",
+                                    //     type: ModalTypeEnum.MODAL_ADD_RECORD_COPYRIGHT,
+                                    //     data: {customer_id}
+                                    // });
                                 }}
                             >
                                 <p className="text-white">Thêm mới</p>

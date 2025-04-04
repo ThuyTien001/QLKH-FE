@@ -4,10 +4,14 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Select, Upload, UploadFile } from "antd";
 import { useEffect, useState } from "react";
 
-export const ModalAddRecordCopyright = ({
-    customer_id,
-}:{
-    customer_id: number;
+interface ModalAddRecord{
+  customer_id: number | null;
+  onAddRecord: (dataRecord: any)=> void;
+  fetchRecord: ()=> void;
+  onClose: ()=> void;
+}
+export const ModalAddRecordCopyright: React.FC<ModalAddRecord> = ({
+    customer_id, onAddRecord, fetchRecord, onClose
 }) =>{
     const [form] = Form.useForm();
     const [commission, setCommission] = useState<any[]>([]);
@@ -68,7 +72,10 @@ export const ModalAddRecordCopyright = ({
             if(response){
                 message.success("Thêm hồ sơ thành công");
                 form.resetFields();
-                window.location.reload();
+                // window.location.reload();
+                onAddRecord(response.data);
+                fetchRecord();
+                onClose();
             }else{
                 message.error("Thêm hồ sơ thất bại");
             }

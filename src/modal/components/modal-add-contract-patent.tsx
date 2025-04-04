@@ -4,10 +4,14 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Upload, UploadFile } from "antd";
 import { useEffect } from "react";
 
-export const ModalAddContractPatent = ({
-    record_id,
-}:{
-    record_id: number;
+interface ModalAddContract{
+    record_id: number | null;
+    onAddContract: (dataContract: any)=> void;
+    fetchcontract: ()=> void;
+    onClose: ()=> void;
+}
+export const ModalAddContractPatent: React.FC<ModalAddContract> = ({
+    record_id, onAddContract, fetchcontract, onClose
 }) => {
     const [form] = Form.useForm();
     useEffect(() => {
@@ -47,7 +51,10 @@ export const ModalAddContractPatent = ({
             if(response){
                 message.success("Thêm hợp đồng thành công");
                 form.resetFields();
-                window.location.reload();
+                // window.location.reload();
+                onAddContract(response.data);
+                fetchcontract();
+                onClose();
             }else{
                 message.error("Thêm hợp đồng thất bại");
             }

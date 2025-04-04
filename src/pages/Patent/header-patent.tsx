@@ -6,13 +6,18 @@ import { BiSearch } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import styled from "styled-components";
 
+interface HeaderAddProfileProps{
+    openAddProfileModal: ()=> void;
+}
+type HeaderProps ={
+    data: Array<{ [key: string]: any}>;
+    onFilter: (filterData: any[]) => void;
+} & HeaderAddProfileProps
 export const HeaderPatent = ({
     data,
     onFilter,
-}:{
-    data: Array<{[key: string]: any}>;
-    onFilter: (filteredData: any[]) => void
-}) => {
+    openAddProfileModal,
+}:HeaderProps) => {
     const {ModalTypeEnum, toggleModal} = useModal()
     const [searchQuery,setSearchQuery] = useState("");
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,10 +72,11 @@ export const HeaderPatent = ({
                         <div
                             className="flex items-center gap-2"
                             onClick={() => {
-                                toggleModal({
-                                    title: "Thêm thông tin khách hàng",
-                                    type: ModalTypeEnum.MODAL_ADD_PROFILE_STYLE
-                                });
+                                openAddProfileModal();
+                                // toggleModal({
+                                //     title: "Thêm thông tin khách hàng",
+                                //     type: ModalTypeEnum.MODAL_ADD_PROFILE_STYLE
+                                // });
                             }}
                         >
                             <p className="text-white">Thêm mới</p>

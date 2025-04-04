@@ -4,11 +4,13 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, message, Upload, UploadFile } from "antd"
 import dayjs from "dayjs";
 
-export const ModalAddStatusRecordBrand = ({
-    record_id,
-}: {
-    record_id: number
-}) => {
+interface ModalAddStatusRecord{
+    record_id: number | null;
+    onAddStatus: (dataRecord: any) => void;
+    fetchStatus: ()=> void;
+    onClose: ()=> void;
+}
+export const ModalAddStatusRecordBrand: React.FC<ModalAddStatusRecord> = ({record_id, onAddStatus, fetchStatus, onClose})=> {
     const [form] = Form.useForm();
 
     //Helper function to append files to FormData
@@ -65,7 +67,10 @@ export const ModalAddStatusRecordBrand = ({
                 if(response){
                     message.success("Thêm trạng thái thành công");
                     form.resetFields();
-                    window.location.reload()
+                    // window.location.reload()
+                    onAddStatus(response.data);
+                    fetchStatus();
+                    onClose();
                 }else{
                     message.error("Thêm trạng thái thất bại");
                 }

@@ -1,8 +1,14 @@
 import { apiProvinces, apiStyleProduct } from "@/api";
+import { dataCustomer } from "@/type";
 import { Button, Form, Input, message, Select } from "antd"
 import { useEffect, useState } from "react";
 
-export const ModalAddProfileStyle = () => {
+interface ModalAddProfileStyleProp {
+    onClose: () => void;
+    addProfileToList: (newProfile: dataCustomer) => void;
+    fetchProfile: () =>void;
+}
+export const ModalAddProfileStyle = ({onClose, addProfileToList, fetchProfile}: ModalAddProfileStyleProp) => {
     const [form] = Form.useForm();
     const [cities, setCities] = useState<any[]>([]);
     const [ districts, setDistricts] = useState<any[]>([]);
@@ -133,7 +139,10 @@ export const ModalAddProfileStyle = () => {
             if(response && response.success){
                 message.success('Thêm khách hàng thành công');
                 form.resetFields();
-                window.location.reload();
+                // window.location.reload();
+                fetchProfile();
+                addProfileToList(response.data);
+                onClose();
             }else{
                 message.error(response.data.message || "Thêm khách hàng thất bại");
 

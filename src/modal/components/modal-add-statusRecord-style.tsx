@@ -4,12 +4,14 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, message, Upload, UploadFile } from "antd"
 import dayjs from "dayjs";
 
+interface ModalAddStatus{
+    record_id: number | null;
+    onAddStatus: (dataStatus: any) => void;
+    fetchStatus: ()=> void;
+    onClose: () =>void;
+}
 
-export const ModalAddStatusRecordStyle = ({
-    record_id,
-}: {
-    record_id: number
-}) => {
+export const ModalAddStatusRecordStyle: React.FC<ModalAddStatus> = ({record_id, onAddStatus, fetchStatus, onClose}) => {
     // const {record_id} = data;
 
     // console.log("modal add status record", record_id)
@@ -71,6 +73,9 @@ export const ModalAddStatusRecordStyle = ({
                 message.success("Thêm trạng thái thành công");
                 form.resetFields();
                 // window.location.reload()
+                onAddStatus(response.data);
+                fetchStatus();
+                onClose();
             }else{
                 message.error("Thêm trạng thái thất bại");
             }

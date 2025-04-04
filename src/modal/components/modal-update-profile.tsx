@@ -4,69 +4,84 @@ import { UploadOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message, Select, Upload, UploadFile } from 'antd';
 import { useEffect, useState } from "react";
 
-export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
+interface ModalUpdateProfileProps {
+    formValues: FormValuesUpdate;
+    onClose: () => void;
+    onUpdate: (updatedRecord: any) => void;
+    fetchRecord: () => void;
+  }
+export const ModalUpdateProfile = ({
+    formValues,
+    onClose,
+    onUpdate,
+    fetchRecord
+}: ModalUpdateProfileProps) => {
     const [form] = Form.useForm();
     const [commission, setCommission] = useState<any[]>([]);
-    console.log("form Values: ", formValues)
+    // const [fileList, setFileList] = useState([]);
+    const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
+
+
+    // console.log("form Values: ", formValues)
     useEffect(() => {
-        if(formValues){
-            form.setFieldsValue({
-                record_code: formValues.record_code,
-                form: formValues.form
-                    ?[
-                        {
-                            uid: '-1',
-                            name: formValues.form.split('/').pop(),
-                            status: 'done',
-                            url: formValues.form
-                        }
-                    ]
-                    :[],
-                image: formValues.image
-                    ?[
-                        {
-                            uid: '-1',
-                            name: formValues.image.split('/').pop(),
-                            status: 'done',
-                            url: formValues.image
-                        }
-                    ]
-                    :[],
-                    authorization: formValues.authorization
-                    ?[
-                        {
-                            uid: '-1',
-                            name: formValues.authorization.split('/').pop(),
-                            status: 'done',
-                            url: formValues.authorization
-                        }
-                    ]
-                    :[],
-                    business_license: formValues.business_license
-                    ?[
-                        {
-                            uid: '-1',
-                            name: formValues.business_license.split('/').pop(),
-                            status: 'done',
-                            url: formValues.business_license
-                        }
-                    ]
-                    :[],
-                    orther: formValues.orther
-                    ?[
-                        {
-                            uid: '-1',
-                            name: formValues.orther.split('/').pop(),
-                            status: 'done',
-                            url: formValues.orther
-                        }
-                    ]
-                    :[],
-                    // commission_id: formValues.commission_id,
-                    commission_id: formValues.commission_id,
-                    record_id: formValues.record_id
-            })
-        }
+        // if(formValues){
+        //     form.setFieldsValue({
+        //         record_code: formValues.record_code,
+        //         form: formValues.form
+        //             ?[
+        //                 {
+        //                     uid: '-1',
+        //                     name: formValues.form.split('/').pop(),
+        //                     status: 'done',
+        //                     url: formValues.form
+        //                 }
+        //             ]
+        //             :[],
+        //         image: formValues.image
+        //             ?[
+        //                 {
+        //                     uid: '-1',
+        //                     name: formValues.image.split('/').pop(),
+        //                     status: 'done',
+        //                     url: formValues.image
+        //                 }
+        //             ]
+        //             :[],
+        //             authorization: formValues.authorization
+        //             ?[
+        //                 {
+        //                     uid: '-1',
+        //                     name: formValues.authorization.split('/').pop(),
+        //                     status: 'done',
+        //                     url: formValues.authorization
+        //                 }
+        //             ]
+        //             :[],
+        //             business_license: formValues.business_license
+        //             ?[
+        //                 {
+        //                     uid: '-1',
+        //                     name: formValues.business_license.split('/').pop(),
+        //                     status: 'done',
+        //                     url: formValues.business_license
+        //                 }
+        //             ]
+        //             :[],
+        //             orther: formValues.orther
+        //             ?[
+        //                 {
+        //                     uid: '-1',
+        //                     name: formValues.orther.split('/').pop(),
+        //                     status: 'done',
+        //                     url: formValues.orther
+        //                 }
+        //             ]
+        //             :[],
+        //             // commission_id: formValues.commission_id,
+        //             commission_id: formValues.commission_id,
+        //             record_id: formValues.record_id
+        //     })
+        // }
         const fetchCommission = async () => {
             try {
                 const response = await apiStyleProduct.getCommission();
@@ -114,11 +129,46 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
             formData.append("record_code", formattedValues.record_code);
             if(formattedValues.commission_id) formData.append("commission_id", formattedValues.commission_id.toString());
             if(formValues.record_id) formData.append('record_id', formValues.record_id.toString())
-            appendFilesToFormData(formData, 'form', formattedValues.form);
-            appendFilesToFormData(formData, 'image', formattedValues.image);
-            appendFilesToFormData(formData, 'authorization', formattedValues.authorization);
-            appendFilesToFormData(formData, 'business_license', formattedValues.business_license);
-            appendFilesToFormData(formData, 'orther', formattedValues.orther);
+            // appendFilesToFormData(formData, 'form', formattedValues.form);
+            // appendFilesToFormData(formData, 'image', formattedValues.image);
+            // appendFilesToFormData(formData, 'authorization', formattedValues.authorization);
+            // appendFilesToFormData(formData, 'business_license', formattedValues.business_license);
+            // appendFilesToFormData(formData, 'orther', formattedValues.orther);
+
+            // Trường "form"
+                if (formattedValues.form && formattedValues.form.length > 0) {
+                    appendFilesToFormData(formData, "form", formattedValues.form);
+                } else {
+                    formData.append("form", ""); // Gửi chuỗi rỗng nếu file đã bị xóa
+                }
+                // Trường "image"
+                if (formattedValues.image && formattedValues.image.length > 0) {
+                    appendFilesToFormData(formData, "image", formattedValues.image);
+                } else {
+                    formData.append("image", "");
+                }
+                // Trường "authorization"
+                if (formattedValues.authorization && formattedValues.authorization.length > 0) {
+                    appendFilesToFormData(formData, "authorization", formattedValues.authorization);
+                } else {
+                    formData.append("authorization", "");
+                }
+                // Trường "business_license"
+                if (formattedValues.business_license && formattedValues.business_license.length > 0) {
+                    appendFilesToFormData(formData, "business_license", formattedValues.business_license);
+                } else {
+                    formData.append("business_license", "");
+                }
+                // Trường "orther"
+                if (formattedValues.orther && formattedValues.orther.length > 0) {
+                    appendFilesToFormData(formData, "orther", formattedValues.orther);
+                } else {
+                    formData.append("orther", "");
+                }
+            
+
+            // console.log("Data submit: ", formData);
+
 
             const response = await apiRecord.updateRecord(formData);
             if(!response){
@@ -128,7 +178,10 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
             if(response){
                 message.success("Cập nhật hồ sơ thành công");
                 form.resetFields();
-                window.location.reload();
+                // window.location.reload();
+                onUpdate(response.data);
+                fetchRecord();
+                onClose();
             }else{
                 message.error("Cập nhật hồ sơ thất bại");
             }
@@ -145,6 +198,61 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
         <Form
             layout="vertical"
             form={form}
+            initialValues={{
+                record_code: formValues.record_code,
+                form: formValues.form
+                  ? [
+                      {
+                        uid: '-1',
+                        name: formValues.form.split('/').pop(),
+                        status: 'done',
+                        url: formValues.form,
+                      },
+                    ]
+                  : [],
+                image: formValues.image
+                  ? [
+                      {
+                        uid: '-1',
+                        name: formValues.image.split('/').pop(),
+                        status: 'done',
+                        url: formValues.image,
+                      },
+                    ]
+                  : [],
+                authorization: formValues.authorization
+                  ? [
+                      {
+                        uid: '-1',
+                        name: formValues.authorization.split('/').pop(),
+                        status: 'done',
+                        url: formValues.authorization,
+                      },
+                    ]
+                  : [],
+                business_license: formValues.business_license
+                  ? [
+                      {
+                        uid: '-1',
+                        name: formValues.business_license.split('/').pop(),
+                        status: 'done',
+                        url: formValues.business_license,
+                      },
+                    ]
+                  : [],
+                orther: formValues.orther
+                  ? [
+                      {
+                        uid: '-1',
+                        name: formValues.orther.split('/').pop(),
+                        status: 'done',
+                        url: formValues.orther,
+                      },
+                    ]
+                  : [],
+                commission_id: formValues.commission_id,
+                record_id: formValues.record_id,
+              }}
             onFinish={onFinish}
         >
             <Form.Item label="Mã hồ sơ" name="record_code">
@@ -158,13 +266,36 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
                 getValueFromEvent={(e) => {
                     return Array.isArray(e) ? e: e?.fileList || [];
                 }}
-                rules={[{ required: true, message: "Vui lòng cung cấp đơn" }]}
+                // rules={[{ required: true, message: "Vui lòng cung cấp đơn" }]}
             >
                 <Upload 
                     beforeUpload={() => false} 
                     maxCount={1}
-                    onChange={(info) => handleFilesChange('form', info)} // Handle file change
-                    fileList={form.getFieldValue('form')} // Bind fileList to form value
+                    // onRemove={() => {
+                    //     // Khi xóa file, cập nhật lại giá trị của trường file thành mảng rỗng
+                    //     form.setFieldsValue({ form: [] });
+                    //   }}
+                    // onRemove={(file) => {
+                    //     const currentList = form.getFieldValue('form') || [];
+                    //     const newList = currentList.filter((f: any) => f.uid !== file.uid);
+                    //     console.log("New list for form:", newList);
+                    //     form.setFieldsValue({ form: newList });
+                    //     return true;
+                    //   }}
+                    // onRemove={(file) => {
+                    //     const fieldName = "form"; // Thay bằng tên trường tương ứng
+                    //     form.setFieldsValue({ [fieldName]: "" }); // Đặt giá trị về rỗng
+                    //     return true;
+                    // }}
+                    onRemove={() => {
+                        form.setFieldsValue({ form: [] }); // Đảm bảo luôn là mảng
+                        setFileList([]); // Cập nhật state
+                        return true;
+                    }}
+                    // onChange={(info) => handleFilesChange('form', info)} // Handle file change
+                    // fileList={form.getFieldValue('form')} // Bind fileList to form value
+                    fileList={fileList || []} // Đảm bảo không bị lỗi
+                    onChange={({fileList }) => setFileList(fileList)}
                     >
                 <Input
                     placeholder="Nhấn để chọn tệp"
@@ -186,11 +317,15 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
                 getValueFromEvent={(e) => {
                     return Array.isArray(e) ? e: e?.fileList || [];
                 }}
-                rules={[{ required: true, message: "Vui lòng tải lên hình ảnh/Logo" }]}
+                // rules={[{ required: true, message: "Vui lòng tải lên hình ảnh/Logo" }]}
             >
                 <Upload 
                     beforeUpload={() => false} 
                     maxCount={1} 
+                    onRemove={() => {
+                        // Khi xóa file, cập nhật lại giá trị của trường file thành mảng rỗng
+                        form.setFieldsValue({ image: [] });
+                      }}
                     // accept="image/*"
                     onChange={(info) => handleFilesChange('image', info)} // Handle file change
                     fileList={form.getFieldValue('image')} // Bind fileList to form value
@@ -215,11 +350,15 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
                 getValueFromEvent={(e) => {
                     return Array.isArray(e) ? e: e?.fileList || [];
                 }}
-                rules={[{ required: true, message: "Vui lòng cung cấp giấy ủy quyền" }]}
+                // rules={[{ required: true, message: "Vui lòng cung cấp giấy ủy quyền" }]}
             >
                 <Upload 
                     beforeUpload={() => false} 
                     maxCount={1}
+                    onRemove={() => {
+                        // Khi xóa file, cập nhật lại giá trị của trường file thành mảng rỗng
+                        form.setFieldsValue({ authorization: [] });
+                      }}
                     onChange={(info) => handleFilesChange('authorization', info)} // Handle file change
                     fileList={form.getFieldValue('authorization')} // Bind fileList to form value
                 >
@@ -243,11 +382,15 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
                 getValueFromEvent={(e) => {
                     return Array.isArray(e) ? e: e?.fileList || [];
                 }}
-                rules={[{ required: true, message: "Vui lòng cung cấp giấy phép kinh doanh" }]}
+                // rules={[{ required: true, message: "Vui lòng cung cấp giấy phép kinh doanh" }]}
             >
                 <Upload 
                     beforeUpload={() => false} 
                     maxCount={1}
+                    onRemove={() => {
+                        // Khi xóa file, cập nhật lại giá trị của trường file thành mảng rỗng
+                        form.setFieldsValue({ business_license: [] });
+                      }}
                     onChange={(info) => handleFilesChange('business_license', info)} // Handle file change
                     fileList={form.getFieldValue('business_license')} // Bind fileList to form value
                     >
@@ -275,6 +418,10 @@ export const ModalUpdateProfile = (formValues: FormValuesUpdate) => {
                 <Upload 
                     beforeUpload={() => false} 
                     maxCount={1}
+                    onRemove={() => {
+                        // Khi xóa file, cập nhật lại giá trị của trường file thành mảng rỗng
+                        form.setFieldsValue({ orther: [] });
+                      }}
                     onChange={(info) => handleFilesChange('orther', info)} // Handle file change
                     fileList={form.getFieldValue('orther')} // Bind fileList to form value
                     >

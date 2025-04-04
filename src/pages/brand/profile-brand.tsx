@@ -6,8 +6,10 @@ import { IoIosAdd } from "react-icons/io";
 export const ProfileBrand = ({
     data = [],
     customer_id,
+    onAddRecord,
 }: {data: any[];
     customer_id: number;
+    onAddRecord: (newRecord: any) =>void;
 }) =>{
     const {ModalTypeEnum, toggleModal} = useModal();
     return(
@@ -21,11 +23,12 @@ export const ProfileBrand = ({
                             <div
                                 className="flex items-center gap-2"
                                 onClick={() => {
-                                    toggleModal({
-                                        title: "Thêm hồ sơ",
-                                        type: ModalTypeEnum.MODAL_ADD_PROFILE_BRAND,
-                                        data: {customer_id}
-                                    });
+                                    // toggleModal({
+                                    //     title: "Thêm hồ sơ",
+                                    //     type: ModalTypeEnum.MODAL_ADD_PROFILE_BRAND,
+                                    //     data: {customer_id}
+                                    // });
+                                    onAddRecord(customer_id);
                                 }}
                             >
                                 <p className="text-white">Thêm mới</p>

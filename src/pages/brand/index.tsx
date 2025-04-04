@@ -8,7 +8,7 @@ import { apiBrand, apiStyleProduct } from "@/api"
 import { BiDotsVerticalRounded, BiEditAlt } from "react-icons/bi"
 import { useModal } from "@/hooks"
 import { IoIosAdd } from 'react-icons/io';
-import { ModalAddContractBrand, ModalAddStatusRecordBrand, } from "@/modal/components"
+import { ModalAddContractBrand, ModalAddProfileBrand, ModalAddProfileStyle, ModalAddStatusRecordBrand, } from "@/modal/components"
 import { ContractBrand } from "./contract"
 import dayjs from "dayjs"
 
@@ -18,9 +18,12 @@ export const Brand = () => {
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
     // const[isModalVissible, setIsModalVissible] = useState(false);
+    const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
     const [isContractModalVisible, setIsContractModalVisible] = useState(false);
     const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
+    const [selectedProfileId, setSelectedProfileId] = useState<number | null>(null);
+    const [isRecordModalVisible, setIsRecordModalVisible] = useState(false);
     useEffect(()=>{
         const fetchData = async() =>{
             try{
@@ -104,11 +107,40 @@ export const Brand = () => {
                 message.error("Lỗi khi cập nhật trạng thái khách hàng!")
             }
         }
+        //Hàm thêm khách hàng vào danh sách 
+        const addProfileToList = (newProfile: any)=>{
+            setBrand((prevProfile) => [... prevProfile, newProfile]);
+            setFilteredData((prevProfile) => [... prevProfile, newProfile]);
+        }
+        const fetchProfile = async()=>{
+            try{
+                const response = await apiBrand.getBrand();
+                if(response && response.data){
+                    setBrand(response.data);
+                    setFilteredData(response.data)
+                }else{
+                    console.error("No data found in response");
+                }
+            }catch(error){
+                console.error("Error fetching Customer: ", error);
+            }
+        }
+        const handleCloseProfileModal =() => {
+            setIsProfileModalVisible(false)
+        }
+        const handleOpenModalAddRecord = (customer_id: number) => {
+            setIsRecordModalVisible(true);
+            setSelectedProfileId(customer_id);
+        }
+        const handleCloseRecordModal = () => {
+            setIsRecordModalVisible(false);
+            setSelectedProfileId(null);
+        }
     return (
         <div>
             <Header />
             <div className="mt-4 mr-4"> 
-                <HeaderBrand data={brand} onFilter={handleFilter}/>
+                <HeaderBrand data={brand} onFilter={handleFilter} openAddProfileModal={() => setIsProfileModalVisible(true)}/>
                 <Table 
                 // dataSource={brand.map((item, index) => ({...item, key: index}))}
                 dataSource={(filteredData.length > 0 ? filteredData : []).map((item, index) => ({...item, key: index}))}
@@ -253,7 +285,7 @@ export const Brand = () => {
                                         {
                                             key: "1",
                                             label: "Hồ sơ",
-                                            children: <ProfileBrand data={item.list_profile.map((profile: any) => ({
+                                            children: <ProfileBrand onAddRecord={() => handleOpenModalAddRecord(item.customer_id)} data={item.list_profile.map((profile: any) => ({
                                                 ...profile,
                                                 status_profile: profile.status_profile || [],
                                                 contracts: profile.contracts
@@ -325,24 +357,42 @@ export const Brand = () => {
                         )
                     }}
                 />
+                <Modal
+                    title="Thêm khách hàng"
+                    open={isProfileModalVisible}
+                    onCancel={handleCloseProfileModal}
+                    footer={null}
+                >
+                    <ModalAddProfileStyle fetchProfile={fetchProfile} addProfileToList={addProfileToList} onClose={handleCloseProfileModal}/>
+                </Modal>
+                <Modal
+                    title="Thêm hồ sơ"
+                    open={isRecordModalVisible}
+                    onCancel={handleCloseRecordModal}
+                    footer={null}
+                >
+                    {selectedProfileId && <ModalAddProfileBrand fetchRecord={fetchProfile} onAddRecord={handleOpenModalAddRecord} customer_id={selectedProfileId} onclose={handleCloseRecordModal}/>}
+                </Modal>
                 <Modal 
-                    visible={isContractModalVisible}
+                    title="Thêm hợp đồng"
+                    open={isContractModalVisible}
                     onCancel={handleCloseModalContract}
                     footer={null}
                 >
 
                     {modalData?.record_id && (
-                        <ModalAddContractBrand record_id={modalData.record_id} />
+                        <ModalAddContractBrand onAddContract={handleOpenModalContract} fetchContrat={fetchProfile} onClose={handleCloseModalContract} record_id={modalData.record_id} />
                     )}
                 </Modal>
                 <Modal 
-                    visible={isStatusModalVisible}
+                    title="Thêm trạng thái hồ sơ"
+                    open={isStatusModalVisible}
                     onCancel={handleCloseModalStatus}
                     footer={null}
                 >
 
                     {modalData?.record_id && (
-                        <ModalAddStatusRecordBrand record_id={modalData.record_id} />
+                        <ModalAddStatusRecordBrand onAddStatus={handleOpenModalStatus} fetchStatus={fetchProfile} onClose={handleCloseModalStatus} record_id={modalData.record_id} />
                     )}
                 </Modal>
             </div>

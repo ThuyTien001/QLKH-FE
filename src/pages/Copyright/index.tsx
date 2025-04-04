@@ -8,7 +8,7 @@ import { apiCopyright, apiStyleProduct } from "@/api"
 import { RecordCopyright } from "./record"
 import { IoIosAdd } from "react-icons/io"
 import { StatusRecordCopyright } from "./status-record"
-import { ModalAddContract, ModalAddStatusRecordStyle } from "@/modal/components"
+import { ModalAddContract, ModalAddProfileStyle, ModalAddRecordCopyright, ModalAddStatusRecordStyle } from "@/modal/components"
 import { ContractCopyright } from "./contract"
 import dayjs from "dayjs"
 
@@ -18,9 +18,12 @@ export const Copyright = () => {
     type ModalData = {customer_id?: number; record_id?: number} | null;
     const [modalData, setModalData] = useState<ModalData>(null);
     // const [isModalVissible, setIsModalVissible] = useState(false);
+    const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
     const [isContractModalVisible, setIsContractModalVisible] = useState(false);
     const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
+    const [selectedProfileId, setSelectedProfileId] = useState<number | null>(null);
+    const [isRecordModalVisible, setIsRecordModalVisible] = useState(false);
     useEffect(() => {
         const fetchData = async() => {
             try{
@@ -105,11 +108,39 @@ export const Copyright = () => {
                     message.error("Lỗi khi cập nhật trạng thái khách hàng!")
                 }
     }
+    const addProfileToList = (newProfile: any)=>{
+        setCopyright((prevProfile) => [...prevProfile, newProfile])
+        setFilteredData((prevProfile) => [...prevProfile, newProfile])
+    };
+    const fetchProfile = async()=>{
+        try{
+            const response = await apiStyleProduct.getStyleProduct();
+            if(response && response.data){
+                setCopyright(response.data);
+                setFilteredData(response.data);
+            }else{
+                console.error("No data found in response");
+            }
+        }catch(error){
+            console.error("Error fetching Customer: ", error);
+        }
+    };
+    const handleCloseProfileModal = () => {
+        setIsProfileModalVisible(false)
+    }
+    const handleOpenModalAddRecord = (customer_id: number) => {
+        setIsRecordModalVisible(true);
+        setSelectedProfileId(customer_id);
+    }
+    const handleCloseRecordModal = () => {
+        setIsRecordModalVisible(false);
+        setSelectedProfileId(null);
+    }
     return (
         <div>
             <Header/>
             <div className="mt-4 mr-4">
-                <HeaderCopyright data={copyright} onFilter={handleFilter}/>
+                <HeaderCopyright data={copyright} onFilter={handleFilter} openAddProfileModal={()=> setIsProfileModalVisible(true)}/>
                 <Table
                     // dataSource={copyright.map((item, index) => ({...item, key: index}))}
                     dataSource={(filteredData.length>0 ? filteredData: []).map((item, index) => ({...item, key: index}))}
@@ -245,7 +276,7 @@ export const Copyright = () => {
                                         {
                                             key: "1",
                                             label: "Hồ sơ",
-                                            children: <RecordCopyright data={item.list_profile.map((profile: any) => ({
+                                            children: <RecordCopyright onAddRecord={() =>handleOpenModalAddRecord(item.customer_id)} data={item.list_profile.map((profile: any) => ({
                                                 ...profile,
                                                 status_profile: profile.status_profile || [],
                                                 contracts: profile.contracts || [],
@@ -315,22 +346,40 @@ export const Copyright = () => {
                         )
                     }}
                 />
+                <Modal
+                    title = "Thêm khách hàng"
+                    open={isProfileModalVisible}
+                    onCancel={handleCloseProfileModal}
+                    footer={null}
+                >
+                    <ModalAddProfileStyle fetchProfile={fetchProfile} onClose={handleCloseProfileModal} addProfileToList={addProfileToList} />
+                </Modal>
+                <Modal
+                    title="Thêm hồ sơ"
+                    open={isRecordModalVisible}
+                    onCancel={handleCloseRecordModal}
+                    footer={null}
+                >
+                    {selectedProfileId && <ModalAddRecordCopyright onAddRecord={handleOpenModalAddRecord} fetchRecord={fetchProfile} onClose={handleCloseRecordModal} customer_id={selectedProfileId} />}
+                </Modal>
                 <Modal 
+                    title="Thêm hợp đồng"
                     visible={isContractModalVisible}
                     onCancel={handleCloseModalContract}
                     footer = {null}
                 >
                     {modalData?.record_id && (
-                        <ModalAddContract record_id={modalData.record_id} />
+                        <ModalAddContract onAddContract={handleOpenModalContract} fetchContract={fetchProfile} onClose={handleCloseModalContract} record_id={modalData.record_id} />
                     )}
                 </Modal>
                 <Modal 
+                    title="Thêm trạng thái hồ sơ"
                     visible={isStatusModalVisible}
                     onCancel={handleCloseModalStatus}
                     footer = {null}
                 >
                     {modalData?.record_id && (
-                        <ModalAddStatusRecordStyle record_id={modalData.record_id} />
+                        <ModalAddStatusRecordStyle onAddStatus={handleOpenModalStatus} fetchStatus={fetchProfile} onClose={handleCloseModalStatus} record_id={modalData.record_id} />
                     )}
                 </Modal>
             </div>

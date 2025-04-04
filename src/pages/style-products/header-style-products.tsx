@@ -6,13 +6,23 @@ import { BiSearch } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 import styled from "styled-components";
 
+interface HeaderAddProfileStyleProps{
+    openAddProfileModal: () => void;
+}
+type HeaderStyleProductProps = {
+    data: Array<{ [key: string]: any }>;
+    onFilter: (filteredData: any[]) => void;
+} & HeaderAddProfileStyleProps
 export const HeaderStyleProducts = ({
     data,
     onFilter,
-}:{
-    data: Array<{ [key: string]: any }>;
-    onFilter: (filteredData: any[]) => void;
-}) => {
+    openAddProfileModal
+}: HeaderStyleProductProps
+// {
+//     data: Array<{ [key: string]: any }>;
+//     onFilter: (filteredData: any[]) => void;
+// }
+) => {
         const {ModalTypeEnum, toggleModal} = useModal()
         const [searchQuery, setSearchQuery] = useState("");
         // const [filteredData, setFilteredData] = useState(data);
@@ -53,6 +63,7 @@ export const HeaderStyleProducts = ({
                         <div
                             className="flex items-center gap-2"
                             onClick={() => {
+                                // openAddProfileModal
                                 toggleModal({
                                     title: "Thêm thông tin khách hàng",
                                     type: ModalTypeEnum.MODAL_ADD_CUSTOMER_FILE
@@ -69,10 +80,11 @@ export const HeaderStyleProducts = ({
                         <div
                             className="flex items-center gap-2"
                             onClick={() => {
-                                toggleModal({
-                                    title: "Thêm thông tin khách hàng",
-                                    type: ModalTypeEnum.MODAL_ADD_PROFILE_STYLE
-                                });
+                                openAddProfileModal()
+                                // toggleModal({
+                                //     title: "Thêm thông tin khách hàng",
+                                //     type: ModalTypeEnum.MODAL_ADD_PROFILE_STYLE
+                                // });
                             }}
                         >
                             <p className="text-white">Thêm mới</p>

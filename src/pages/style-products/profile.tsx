@@ -1,8 +1,9 @@
 
+import { FormValuesUpdate } from "@/type";
 import { Button, Table, } from "antd"
 // import { StatusProfileStyle } from "./status-profile"
 // import { IoIosAdd } from "react-icons/io";
-import { useModal } from "@/hooks";
+// import { useModal } from "@/hooks";
 import { BiEditAlt } from "react-icons/bi";
 import { IoIosAdd } from "react-icons/io";
 // import { useState } from "react";
@@ -11,11 +12,15 @@ import { IoIosAdd } from "react-icons/io";
 export const ProfileStyleProducts = ({
     data = [], 
     customer_id,
+    onAddRecord,
+    onUpdate,
 }: {data: any[];
     // onAddCustomer: () => void;
+    onAddRecord: (newRecord: any) =>void;
+    onUpdate: (newRecord: FormValuesUpdate) => void;
     customer_id: number;
 }) => {
-    const {ModalTypeEnum, toggleModal} = useModal()
+    // const {ModalTypeEnum, toggleModal} = useModal()
     // console.log("customer: ", customer_id);
     // const [ selectRecord, setSelectRecordId] = useState<number | null >(null);
     // const [ isModalVisible, setIsModalVisible] = useState(false);
@@ -42,12 +47,13 @@ export const ProfileStyleProducts = ({
 
                             onClick={() => {
                                 // onAddCustomer();
-                                toggleModal({
-                                    title: "Thêm hồ sơ",
-                                    type: ModalTypeEnum.MODAL_ADD_PROFILE,
-                                    data: {customer_id}
+                                // toggleModal({
+                                //     title: "Thêm hồ sơ",
+                                //     type: ModalTypeEnum.MODAL_ADD_PROFILE,
+                                //     data: {customer_id}
                                     
-                                });
+                                // });
+                                onAddRecord(customer_id)
                             }}
                         >
                             <p className="text-white">Thêm mới</p>
@@ -155,11 +161,12 @@ export const ProfileStyleProducts = ({
                                     // className=" cursor-pointer"
                                     onClick={() => {
                                         console.log("Edit clicked for record: ", record);
-                                        toggleModal({
-                                            title: "Chỉnh sửa hồ sơ",
-                                            type: ModalTypeEnum.MODAL_UPDATE_PROFILE,
-                                            data: record,
-                                        });
+                                        // toggleModal({
+                                        //     title: "Chỉnh sửa hồ sơ",
+                                        //     type: ModalTypeEnum.MODAL_UPDATE_PROFILE,
+                                        //     data: record,
+                                        // });
+                                        onUpdate(record);
                                     }}
                                 />
                             </div>

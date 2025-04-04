@@ -12,7 +12,8 @@ import { IoIosAdd } from "react-icons/io";
 import { ContractStyleProduct } from "./contract";
 import { ModalAddContractStyleProduct } from "@/modal/components/modal-add-contract-styleproduct";
 import dayjs from "dayjs";
-import { ModalAddStatusRecordStyle } from "@/modal/components";
+import { ModalAddProfile, ModalAddProfileStyle, ModalAddStatusRecordStyle, ModalUpdateProfile } from "@/modal/components";
+import { FormValuesUpdate } from "@/type";
 
 export const StyleProducts = () => {
     const {toggleModal, ModalTypeEnum} = useModal();
@@ -20,9 +21,15 @@ export const StyleProducts = () => {
     type ModalData = { customer_id?: number; record_id?: number } | null;
     const [modalData, setModalData] = useState<ModalData>(null);
     // const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
     const [isContractModalVisible, setIsContractModalVisible] = useState(false);
     const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
     const [filteredData, setFilteredData] = useState<any[]>([]);
+    const [selectedProfileId, setSelectedProfileId] = useState<number | null>(null);
+    const [isRecordModalVisible, setIsRecordModalVisible] = useState(false);
+
+    const [selectedUpdateProfileId, setSelectedUpdateProfileId] = useState<FormValuesUpdate | null>(null);
+    const [isRecordModalUpdateVisible, setIsRecordModalUpdateVisible] = useState(false);
     useEffect(() => {
         const fetchData = async()=>{
             try{
@@ -62,6 +69,9 @@ export const StyleProducts = () => {
         setIsContractModalVisible(true);
     }
     const isNearExpiration = (record: any) => {
+        if (!record?.list_profile || !Array.isArray(record.list_profile)) {
+            return false;
+          }
         const sixMonthsLater = dayjs().add(6, "months");
         return record.list_profile.some((profile: any) => {
             const expirationDate = dayjs(profile?.status_profile?.[0]?.expiration_date, "DD-MM-YYYY");
@@ -106,11 +116,58 @@ export const StyleProducts = () => {
             message.error("Lỗi khi cập nhật trạng thái khách hàng!")
         }
     }
+
+    const handleOpenModalAddRecord = (customer_id: number) => {
+        setIsRecordModalVisible(true);
+        setSelectedProfileId(customer_id);
+    }
+    const handleCloseRecordModal = () => {
+        setIsRecordModalVisible(false);
+        setSelectedProfileId(null);
+    }
+    const handleOpenModalUpdateRecord = (customer_id: FormValuesUpdate) => {
+        setIsRecordModalUpdateVisible(true);
+        setSelectedUpdateProfileId(customer_id);
+    }
+    const handleCloseModalUpdateRecord = () => {
+        setIsRecordModalUpdateVisible(false);
+        setSelectedUpdateProfileId(null);
+    }
+      // Callback cập nhật lại record sau khi update thành công
+//   const handleUpdateRecord = (updatedRecord: any) => {
+//     setStyleproduct((prev) =>
+//       prev.map((record) => (record.record_id === updatedRecord.record_id ? updatedRecord : record))
+//     );
+//     setFilteredData((prev) =>
+//       prev.map((record) => (record.record_id === updatedRecord.record_id ? updatedRecord : record))
+//     );
+//   };
+    //Hàm thêm khách hàng vào danh sách 
+    const addProfileToList = (newProfile: any)=>{
+        setStyleproduct((prevProfile) => [...prevProfile, newProfile])
+        setFilteredData((prevProfile) => [...prevProfile, newProfile])
+    };
+    const fetchProfile = async()=>{
+        try{
+            const response = await apiStyleProduct.getStyleProduct();
+            if(response && response.data){
+                setStyleproduct(response.data);
+                setFilteredData(response.data);
+            }else{
+                console.error("No data found in response");
+            }
+        }catch(error){
+            console.error("Error fetching Customer: ", error);
+        }
+    };
+    const handleCloseProfileModal = () => {
+        setIsProfileModalVisible(false)
+    }
     return(
         <div>
             <Header/>
             <div className="mt-4 mr-4">
-                <HeaderStyleProducts data={styleproducts} onFilter={handleFilter}  />
+                <HeaderStyleProducts data={styleproducts} onFilter={handleFilter} openAddProfileModal={() => setIsProfileModalVisible(true)} />
                 <Table
                     // dataSource={styleproducts.map((item, index) => ({ ...item, key: index }))}
                     dataSource={(filteredData.length > 0 ? filteredData : []).map((item, index) => ({ ...item, key: index }))}
@@ -248,7 +305,7 @@ export const StyleProducts = () => {
                                         {
                                             key: "1",
                                             label: "Hồ Sơ",
-                                            children: <ProfileStyleProducts data={item.list_profile.map((profile: any)  => ({
+                                            children: <ProfileStyleProducts onAddRecord={() => handleOpenModalAddRecord(item.customer_id)} onUpdate={(record) => handleOpenModalUpdateRecord(record)} data={item.list_profile.map((profile: any)  => ({
                                                 ...profile,
                                                 status_profile: profile.status_profile || [], // Gán giá trị mặc định
                                                 contracts: profile.contracts || [],
@@ -328,7 +385,31 @@ export const StyleProducts = () => {
                     }}
                 />
                 <Modal
-                    visible={isContractModalVisible}
+                    title="Thêm khách hàng"
+                    open={isProfileModalVisible}
+                    onCancel={handleCloseProfileModal}
+                    footer={null}
+                >
+                    <ModalAddProfileStyle fetchProfile={fetchProfile} addProfileToList={addProfileToList} onClose={handleCloseProfileModal}/>
+                </Modal>
+                <Modal
+                    title = "Thêm hồ sơ"
+                    open ={isRecordModalVisible}
+                    onCancel={handleCloseRecordModal}
+                    footer={null}
+                >
+                    {selectedProfileId && <ModalAddProfile fetchRecord={fetchProfile} onAddRecord={handleOpenModalAddRecord} customer_id={selectedProfileId} onClose={handleCloseRecordModal}/>}
+                </Modal>
+                <Modal
+                    title="Chỉnh sửa hồ sơ"
+                    open={isRecordModalUpdateVisible}
+                    onCancel={handleCloseModalUpdateRecord}
+                    footer={null}
+                >
+                    {selectedUpdateProfileId && <ModalUpdateProfile formValues={selectedUpdateProfileId} fetchRecord={fetchProfile} onUpdate={handleOpenModalUpdateRecord} onClose={handleCloseModalUpdateRecord} />}
+                </Modal>
+                <Modal
+                    open={isContractModalVisible}
                     onCancel={handleCloseModalContract}
                     // centered
                     footer={null}
@@ -336,11 +417,11 @@ export const StyleProducts = () => {
                 >
                     
                     {modalData?.record_id && (
-                        <ModalAddContractStyleProduct record_id={modalData.record_id } />
+                        <ModalAddContractStyleProduct onAddContract={handleOpenModalContract} fetchContract={fetchProfile} onClose={handleCloseModalContract} record_id={modalData.record_id } />
                     )}
                 </Modal>
                 <Modal
-                    visible={isStatusModalVisible}
+                    open={isStatusModalVisible}
                     onCancel={handleCloseModalStatus}
                     // centered
                     footer={null}
@@ -348,7 +429,7 @@ export const StyleProducts = () => {
                 >
                     
                     {modalData?.record_id && (
-                        <ModalAddStatusRecordStyle record_id={modalData.record_id } />
+                        <ModalAddStatusRecordStyle onAddStatus={handleOpenModalContract} fetchStatus={fetchProfile} onClose={handleCloseModalStatus} record_id={modalData.record_id } />
                     )}
                 </Modal>
 
