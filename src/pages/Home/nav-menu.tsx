@@ -2,7 +2,6 @@ import { IconTypeProduction, } from "@/assets";
 import { Menu } from "antd";
 import { IoIosAdd } from "react-icons/io";
 import styled from "styled-components";
-import { useModal } from "@/hooks";
 import { useEffect, useState } from "react";
 import { apiClass } from "@/api";
 import { ClassData } from "@/type";

@@ -50,7 +50,7 @@ export const ModalAddCusstomerFile = () => {
                 }
             }
 
-            const processProduct = async (product: any[]) => {
+            const processProduct = async (_product: any[]) => {
                 const partners = await fetchPartner();
                 const partnerMap = new Map(partners.data.map((p:any) => [p.partner_name, p.partner_id]));
                 const leadProviders = await fetchLeadProvider();

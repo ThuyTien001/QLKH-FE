@@ -1,5 +1,5 @@
 import { StaffData } from './../type/staff-type';
-import { LoginData, } from "@/type"
+// import { LoginData, } from "@/type"
 import { axiosClient } from "./axios-client"
 
 export const apiStaff = {

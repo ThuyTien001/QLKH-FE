@@ -11,7 +11,7 @@ interface ModalAddCourseProp{
     fetchCourses: () => void;
 }
 
-export const ModalAddCourse = ({ onClose, addCourseToList, fetchCourses}: ModalAddCourseProp) => {
+export const ModalAddCourse = ({ onClose, fetchCourses}: ModalAddCourseProp) => {
     const [form]=Form.useForm();
     const [loading, setLoading] = useState(false);
     const [classes, setClasses] = useState<any[]>([]);

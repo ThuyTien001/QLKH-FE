@@ -1,6 +1,6 @@
-import { Button, Input } from "antd"
+import { Button, } from "antd"
 import { IoIosAdd } from "react-icons/io"
-import styled from "styled-components"
+// import styled from "styled-components"
 interface HeaderHomeProps {
     openAddCourseModal: () => void;
 }
@@ -40,9 +40,9 @@ export const HeaderHome = ({ openAddCourseModal }: HeaderHomeProps) => {
         </div>
     )
 }
-const CsInput = styled(Input)`
-    input::placeholder{
-        color: #171725;
-        font-size: 14px;
-    }
-`
+// const CsInput = styled(Input)`
+//     input::placeholder{
+//         color: #171725;
+//         font-size: 14px;
+//     }
+// `
