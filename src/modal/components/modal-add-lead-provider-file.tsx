@@ -41,7 +41,7 @@ export const ModalAddLeadProviderFile = () => {
 
     const submitLeadProvider = async(lp: any[]) => {
         try{
-            const response = await fetch("http://localhost:5000/api/leadprovider/add/file", {
+            const response = await fetch("https://qlkh-be.onrender.com/api/leadprovider/add/file", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(lp),

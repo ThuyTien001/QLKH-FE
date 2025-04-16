@@ -76,7 +76,7 @@ export const ModalAddCusstomerFile = () => {
             const submitProduct = async (product: any[]) => {
                 try{
                     // const response = await fetch("http://localhost:5000/api/customer/add/file", {
-                    const response = await fetch("http://dichvukhcn.id.vn/api/student/add/file", {
+                    const response = await fetch("https://qlkh-be.onrender.com/api/student/add/file", {
 
                         method: "POST",
                         headers: {"Content-Type": "application/json"},

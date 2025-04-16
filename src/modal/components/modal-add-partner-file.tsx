@@ -43,7 +43,7 @@ export const ModalAddPartnerFile = () => {
 
     const submitPartner = async (partner: any[]) => {
         try{
-            const response = await fetch("http://localhost:5000/api/partner/add/file", {
+            const response = await fetch("https://qlkh-be.onrender.com/api/partner/add/file", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(partner),
