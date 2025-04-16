@@ -90,7 +90,7 @@ export const ModalAddStudentFile: React.FC<ModalAddStudentFileProps> = ({courseI
         return date.toISOString().split("T")[0]; // Trả về YYYY-MM-DD
     };
     
-    const processStudent = async (student: any[])=> {
+    const processStudent = async (_student: any[])=> {
         // const participants = await fetchParticipants();
         // const participantMap = new Map(participants.data.map((p: any) => [p.participant_name, p.participant_id]))
 

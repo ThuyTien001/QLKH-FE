@@ -26,7 +26,7 @@ export const ModalAddPartnerFile = () => {
         return false; //Ngăn upload tự động của ant design
     };
 
-    const processPartner = async(partner: any[]) => {
+    const processPartner = async(_partner: any[]) => {
         if(partners.length === 0){
             message.error("Vui lòng nhập tẹp danh sách đối tác");
             return;

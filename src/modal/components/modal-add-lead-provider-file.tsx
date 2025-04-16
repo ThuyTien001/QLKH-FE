@@ -24,7 +24,7 @@ export const ModalAddLeadProviderFile = () => {
         reader.readAsArrayBuffer(file);
         return false; // Ngăn upload tự động của ant design
     }
-    const processLeadProvider = async (lp: any[]) => {
+    const processLeadProvider = async (_lp: any[]) => {
         if(leadProviders.length === 0){
             message.error("vui lòng nhập tệp danh sách đầu mối!");
             return;
