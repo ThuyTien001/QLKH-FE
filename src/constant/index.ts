@@ -1,6 +1,7 @@
 // import { REACT_APP_API_URL } from './index';
-// export const REACT_APP_API_URL = 'http://localhost:5000/api/'
-export const REACT_APP_API_URL = 'https://qlkh-be.onrender.com/api'
+export const REACT_APP_API_URL = 'http://localhost:3000/api/'
+// export const REACT_APP_API_URL = 'https://qlkh-be.onrender.com/api'
+// export const REACT_APP_API_URL = 'http://100.119.191.14:3000/api'
 // export const REACT_APP_API_URL = 'http://dichvukhcn.id.vn/api/'
 
 export const isAuthenticated = (): boolean => {
